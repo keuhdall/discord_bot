@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const kraive = '94011401940504576';
 const fica = '166226448598695936';
-const poop = '303239764595965952';
+const keuhdall = '100335365998538752';
 
 bot.on("ready", function () {
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
@@ -23,8 +23,15 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 });
 
 bot.on("message", ({content, channel}) => {
-	if (content !== "!nogord") return ;
-	channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`)
+	if (content === "!help")
+		channel.sendMessage(`Voici la liste des commandes :
+			- !help : affiche ce message
+			- !about : donne des informations sur le bot
+			- !nogord : met kraive en PLS`)
+	else if (content === "!about")
+		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`)
+	else if (content === "!nogord")
+		channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`)
 });
 
 bot.on("message", message => {
