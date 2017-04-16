@@ -12,8 +12,8 @@ bot.on("disconnected", function () {
 });
 
 bot.on("message", function (msg) {
-	if (msg.content.indexOf("ping") === 0) {
-		bot.sendMessage(msg.channel, "pong!");
+	if (msg.content === 'ping') {
+		msg.channel.sendMessage("pong!");
 		console.log("pong-ed " + msg.author.username);
 	}
 });
