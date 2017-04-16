@@ -36,7 +36,8 @@ bot.on("message", ({content, channel}) => {
 
 bot.on("message", message => {
 	if (message.author.id === fica)
-		message.react(bot.emojis.find('name', 'poop')).catch(console.error)
+		console.log('TODO');
+		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 	else if (message.author.id === kraive)
 		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error)
 });
