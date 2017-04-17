@@ -15,11 +15,11 @@ bot.on("disconnected", function () {
 });
 
 bot.on('guildMemberAdd', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`Yo <@${user.id}>, tiens toi à carreau petit fdp sinon la PLS sera pour toi gros batard.`)
+	guild.defaultChannel.sendMessage(`Yo <@${user.id}>, tiens toi à carreau petit fdp sinon la PLS sera pour toi gros batard.`);
 });
 
 bot.on('guildMemberRemove', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`)
+	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
 });
 
 bot.on("message", ({content, channel}) => {
@@ -27,11 +27,25 @@ bot.on("message", ({content, channel}) => {
 		channel.sendMessage(`Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
-- !nogord : met kraive en PLS\`\`\``)
+- !nogord : met kraive en PLS\`\`\``);
 	else if (content === "!about")
-		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`)
+		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
 	else if (content === "!nogord")
-		channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`)
+		channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`);
+});
+
+bot.on("message", ({author, channel, content}) {
+		var tab = content.split(" ");
+		if (tab[0] !== "!cleanmsg") return ;
+		if (tab[1] === "-count" && tab[2]) {
+			var col = channel.fetchMessages({limit : tab[2]});
+			for (i = 0; i < col.length, i++) {
+				col[i].delete();
+			}
+			channel.sendMessage('ggwp');
+		}
+		else
+			channel.sendMessage('blablabla c pa b1');
 });
 
 bot.on("message", message => {
@@ -39,7 +53,7 @@ bot.on("message", message => {
 		console.log('TODO');
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 	else if (message.author.id === kraive)
-		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error)
+		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error);
 });
 
 bot.login(config.token);
