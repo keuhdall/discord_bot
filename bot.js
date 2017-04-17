@@ -61,6 +61,17 @@ bot.on("message", message => {
 			.catch(console.error());
 			message.channel.sendMessage(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
 		}
+		else if ( tab[1] === "-t" && tab[2])
+		{
+			if (message.author.id !== navet && message.author.id !== keuhdall) {
+				message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
+				return ;
+			}
+			if (tab[2] > 30) tab[2] = 30;
+			console.log(message.channel.createdAt.toString());
+			//message.channel.fetchMessages({after : })
+		
+		}
 		else
 			message.channel.sendMessage('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
 });
