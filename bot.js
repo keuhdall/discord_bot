@@ -28,6 +28,7 @@ bot.on("message", ({content, channel}) => {
 		channel.sendMessage(`Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
+- !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !nogord : met kraive en PLS\`\`\``);
 	else if (content === "!about")
@@ -37,8 +38,9 @@ bot.on("message", ({content, channel}) => {
 });
 
 /*
-Function that clean messages;
-Available options : -count -time
+Function that clean messages
+Command : !clean [option] [number]
+Available options : -c -t
 */
 bot.on("message", message => {
 		var tab = message.content.split(" ");
@@ -63,6 +65,25 @@ bot.on("message", message => {
 			message.channel.sendMessage('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
 });
 
+/*
+Function that will display the n-th message
+Command : !msg [index of the message you zqnt to display]
+*/
+bot.on("message", message => {
+	var tab = message.content.split(" ");
+	if (tab[0] !== "!msg" || !tab[1]) return ;
+	tab[1]++;
+	message.channel.fetchMessages({limit : tab[1]})
+	.then(messages => {
+		var msg = messages.array();
+		message.channel.sendMessage(`${msg[tab[1] - 1].content}`);
+	})
+	.catch(console.error());
+});
+
+/*
+Function that will automatically add a reaction to the messages of certain members to troll them
+*/
 bot.on("message", message => {
 	if (message.author.id === fica)
 		console.log('TODO');
