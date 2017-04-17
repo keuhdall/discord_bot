@@ -24,10 +24,10 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 
 bot.on("message", ({content, channel}) => {
 	if (content === "!help")
-		channel.sendMessage(`Voici la liste des commandes :
-			- !help : affiche ce message
-			- !about : donne des informations sur le bot
-			- !nogord : met kraive en PLS`)
+		channel.sendMessage(`Voici la liste des commandes :\`\`\`
+- !help : affiche ce message
+- !about : donne des informations sur le bot
+- !nogord : met kraive en PLS\`\`\``)
 	else if (content === "!about")
 		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`)
 	else if (content === "!nogord")
