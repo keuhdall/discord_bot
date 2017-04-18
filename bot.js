@@ -30,6 +30,7 @@ bot.on("message", ({content, channel}) => {
 - !about : donne des informations sur le bot
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
+- !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
 - !nogord : met kraive en PLS\`\`\``);
 	else if (content === "!about")
 		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
@@ -101,6 +102,26 @@ bot.on("message", message => {
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 	else if (message.author.id === kraive)
 		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error);
+});
+/*
+Function that will print random numbers
+Command : !roll [numbers of rolls]d[size of the dice]
+*/
+bot.on("message", message => {
+	var tmp_cmd = message.content.split(' ');
+	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1]) return;
+	var tmp_dice = tmp_cmd[1].split('d');
+	var values = new Array();
+	for (var i = 0; i < tmp_dice[0]; i ++)
+		values.push(Math.floor(Math.random() * tmp_dice[1]) + 1);
+	var str = 'Resultats : ';
+	for (var j = 0; j < values.length; j++)
+	{
+		str += values[j];
+		if (j != values.length - 1)
+			str += ' ; ';
+	}
+	message.channel.sendMessage(`${str}`);
 });
 
 bot.login(config.token);
