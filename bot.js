@@ -44,10 +44,12 @@ Command : !clean [option] [number]
 Available options : -c -t
 */
 bot.on("message", message => {
+		let authorizedRole = message.guild.roles.find('name', 'Légume');
 		var tab = message.content.split(" ");
 		if (tab[0] !== "!clean") return ;
 		if (tab[1] === "-c" && tab[2]) {
-			if (message.author.id !== navet && message.author.id !== keuhdall) {
+			//if (message.author.id !== navet && message.author.id !== keuhdall) {
+			if (!message.member.roles.has(authorizedRole.id)) {
 				message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 				return ;
 			}
@@ -64,7 +66,7 @@ bot.on("message", message => {
 		}
 		else if ( tab[1] === "-t" && tab[2])
 		{
-			if (message.author.id !== navet && message.author.id !== keuhdall) {
+			if (!message.member.roles.has(authorizedRole.id)) {
 				message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 				return ;
 			}
@@ -103,6 +105,7 @@ bot.on("message", message => {
 	else if (message.author.id === kraive)
 		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error);
 });
+
 /*
 Function that will print random numbers
 Command : !roll [numbers of rolls]d[size of the dice]
