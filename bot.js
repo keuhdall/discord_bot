@@ -127,4 +127,25 @@ bot.on("message", message => {
 	message.channel.sendMessage(`${str}`);
 });
 
+/*
+ Function that prevent spam. Will chenge user's role and deprive him from his permissions.
+ */
+bot.on("message", message => {
+	message.channel.fetchMessages({limit : 4})
+	.then(messages => {
+		let spamRole = Array();
+		spamRole.push(message.guild.roles.find('name', 'Spammeur de merde'));
+		var msg = messages.array();
+		var same = true;
+		for (var i = 1; i < 4; i++) {
+			if (message.content !== msg[i].content)
+				same = false;
+		}
+		if (same === true) {
+			message.member.setRoles(spamRole);
+			message.channel.sendMessage('Vous en avez pas marre de spam bande de connards ? Continuez comme ça et je vous ban !');
+		}
+	}).catch(console.error());
+});
+
 bot.login(config.token);
