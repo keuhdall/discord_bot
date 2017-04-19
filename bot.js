@@ -112,7 +112,7 @@ Command : !roll [numbers of rolls]d[size of the dice]
 */
 bot.on("message", message => {
 	var tmp_cmd = message.content.split(' ');
-	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1]) return;
+	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1]) return ;
 	var tmp_dice = tmp_cmd[1].split('d');
 	var values = new Array();
 	for (var i = 0; i < tmp_dice[0]; i ++)
@@ -131,6 +131,9 @@ bot.on("message", message => {
  Function that prevent spam. Will chenge user's role and deprive him from his permissions.
  */
 bot.on("message", message => {
+	let Moi = message.guild.roles.find('name', 'Moi');
+	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
+	if (message.author.id === bot.user.id || message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id)) return ;
 	message.channel.fetchMessages({limit : 4})
 	.then(messages => {
 		let spamRole = Array();
