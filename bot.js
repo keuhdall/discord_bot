@@ -23,19 +23,20 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
 });
 
-bot.on("message", ({content, channel}) => {
-	if (content === "!help")
-		channel.sendMessage(`Voici la liste des commandes :\`\`\`
+bot.on("message", message => {
+	if (!message.guild) return ;
+	if (message.content === "!help")
+		message.channel.sendMessage(`Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
 - !nogord : met kraive en PLS\`\`\``);
-	else if (content === "!about")
-		channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
-	else if (content === "!nogord")
-		channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`);
+	else if (message.content === "!about")
+		message.channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
+	else if (message.content === "!nogord")
+		message.channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`);
 });
 
 /*
@@ -44,6 +45,7 @@ Command : !clean [option] [number]
 Available options : -c -t
 */
 bot.on("message", message => {
+		if (!message.guild) return ;
 		let authorizedRole = message.guild.roles.find('name', 'Légume');
 		var tab = message.content.split(" ");
 		if (tab[0] !== "!clean") return ;
@@ -82,8 +84,8 @@ Function that will display the n-th message
 Command : !msg [index of the message you zqnt to display]
 */
 bot.on("message", message => {
-	var tab = message.content.split(" ");
-	if (tab[0] !== "!msg" || !tab[1]) return ;
+		var tab = message.content.split(" ");
+		if (tab[0] !== "!msg" || !tab[1] || !message.guild) return ;
 	tab[1]++;
 	message.channel.fetchMessages({limit : tab[1]})
 	.then(messages => {
@@ -97,6 +99,7 @@ bot.on("message", message => {
 Function that will automatically add a reaction to the messages of certain members to troll them
 */
 bot.on("message", message => {
+	if (!message.guild) return ;
 	if (message.author.id === fica)
 		console.log('TODO');
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
@@ -110,7 +113,7 @@ Command : !roll [numbers of rolls]d[size of the dice]
 */
 bot.on("message", message => {
 	var tmp_cmd = message.content.split(' ');
-	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1]) return ;
+	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1] || !message.guild) return ;
 	var tmp_dice = tmp_cmd[1].split('d');
 	var values = new Array();
 	for (var i = 0; i < tmp_dice[0]; i ++)
@@ -129,6 +132,7 @@ bot.on("message", message => {
  Function that prevent spam. Will chenge user's role and deprive him from his permissions.
  */
 bot.on("message", message => {
+	if (!message.guild) return ;
 	let Moi = message.guild.roles.find('name', 'Moi');
 	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
 	if (message.author.id === bot.user.id || message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id)) return ;
@@ -144,7 +148,7 @@ bot.on("message", message => {
 		}
 		if (same === true) {
 			message.member.setRoles(spamRole);
-			message.channel.sendMessage('Vous en avez pas marre de spam bande de connards ? Continuez comme ça et je vous ban !');
+			message.author.sendMessage('T\'en a pas marre de spam espèce de sous-race ? Continues comme ça et je te fout la PLS de ta vie batard !');
 		}
 	}).catch(console.error());
 });
