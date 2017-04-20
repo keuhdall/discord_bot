@@ -53,13 +53,11 @@ bot.on("message", message => {
 				message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 				return ;
 			}
-			if (tab[2] > 50) tab[2] = 50; 
+			if (tab[2] > 50) tab[2] = 50;
 			tab[2]++;
 			message.channel.fetchMessages({limit : tab[2]})
 			.then(messages => {
-				var msg = messages.array();
-				for (var i = 0; i < tab[2]; i++)
-					msg[i].delete();
+				message.channel.bulkDelete(messages);
 			})
 			.catch(console.error());
 			message.channel.sendMessage(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
