@@ -5,6 +5,8 @@ const kraive = '94011401940504576';
 const fica = '166226448598695936';
 const keuhdall = '100335365998538752';
 const navet = '94045969099792384';
+var spamMembers = [];
+var spamRoleTime = 15;
 
 bot.on("ready", function () {
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
@@ -22,6 +24,22 @@ bot.on('guildMemberAdd', ({user, guild}) => {
 bot.on('guildMemberRemove', ({user, guild}) => {
 	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
 });
+
+/*
+ Function called every minutes that will check if the members belonging to spamRole are able to recover their real role
+ */
+function checkSpam() {
+	let potager = bot.guilds.find('name', 'Potager');
+	let spamRole = [];
+	spamRole.push(potager.roles.find('name', 'Spammeur de merde'));
+	for (var i = 0; i < spamMembers.length; i++) {
+			spamMembers[i].time++;
+		if (spamMembers[i].time > spamRoleTime) {
+			spamMembers[i].member.setRoles(spamMembers[i].oldRoles);
+			spamMembers.splice(i, 1);
+		}
+	}
+}
 
 function isAdmin(message) {
 	let Moi = message.guild.roles.find('name', 'Moi');
@@ -55,7 +73,7 @@ bot.on("message", message => {
 /*
 Function that clean messages
 Command : !clean [option] [number]
-Available options : -c -t (-t not implented yet)
+Options : -c -t (-t not implented yet)
 */
 bot.on("message", message => {
 		if (!message.guild) return ;
@@ -158,6 +176,8 @@ bot.on("message", message => {
 				same = false;
 		}
 		if (same === true) {
+			var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+			spamMembers.push(spammer);
 			message.member.setRoles(spamRole);
 			message.author.sendMessage('T\'en a pas marre de spam espèce de sous-race ? Continues comme ça et je te fout la PLS de ta vie batard !');
 		}
@@ -199,10 +219,42 @@ bot.on("message", message => {
 		then(msg => {
 			bot.destroy();
 		});
+	} else if (message.content === 'n' && killConfirm && isAdmin(message)) {
+		message.channel.sendMessage('Ouf, merci !');
+		killConfirm = false;
 	} else {
 		killConfirm = false;
 		return ;
 	}
 });
 
+/*
+ Function that allows an admin to edit the time in the spamRole
+ Command : !spamtime [option] [time (optionnal)]
+ Options : -d (display) Will display the current spamRoleTime ; -e (edit) Will edit the current spamRoleTime with the one given.
+ */
+bot.on("message", message => {
+	if (!message.guild) return ;
+	var tab = message.content.split(" ");
+	if (tab[0] === '!spamtime')
+	{
+		if (!isAdmin(message)) {
+			message.channel.sendMessage('T\'as pas le droit. Dégage.');
+			return ;
+		} else {
+			if (tab[1] === '-e') {
+				if (tab[2]) {
+					spamRoleTime = tab[2];
+					message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+				} else
+					message.channel.sendMessage('T\'as oublié de préciser le nouveau temps, boss');
+			} else if (tab[1] === '-d')
+				message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
+			else
+				message.channel.sendMessage('Erreur de syntaxe');
+		}
+	}
+});
+
+setInterval(checkSpam, 60000);
 bot.login(config.token);
