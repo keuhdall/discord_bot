@@ -23,6 +23,15 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
 });
 
+function isAdmin(message) {
+	let Moi = message.guild.roles.find('name', 'Moi');
+	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
+	if (message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id))
+		return true;
+	else
+		return false
+}
+
 /*
 Function that print a help message with the description of the commands
 Command : !help
@@ -137,9 +146,7 @@ bot.on("message", message => {
  */
 bot.on("message", message => {
 	if (!message.guild) return ;
-	let Moi = message.guild.roles.find('name', 'Moi');
-	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
-	if (message.author.id === bot.user.id || message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id)) return ;
+	if (message.author.id === bot.user.id || isAdmin(message)) return ;
 	message.channel.fetchMessages({limit : 4})
 	.then(messages => {
 		let spamRole = Array();
@@ -155,6 +162,47 @@ bot.on("message", message => {
 			message.author.sendMessage('T\'en a pas marre de spam espèce de sous-race ? Continues comme ça et je te fout la PLS de ta vie batard !');
 		}
 	}).catch(console.error());
+});
+
+/*
+ Function that allows me to recover my permissions is i mess to much with the bot
+ Command : !member [only works with my ID ; you have to edit the code]
+ */
+bot.on("message", message => {
+	let potager = bot.guilds.find('name', 'Potager');
+	let vegetable = potager.roles.find('name', 'Légume');
+	let memberKeuhdall = potager.fetchMember(message.author)
+	.then(member => {
+		let fairRole = Array();
+		fairRole.push(vegetable);
+		if (message.content === '!member' && message.author.id === keuhdall)
+			member.setRoles(fairRole);
+	})
+});
+
+/*
+ Function that will kill the bot. It'll have to be restarted through node.
+ Command : !kill
+ */
+var killConfirm = false;
+bot.on("message", message => {
+	if (!message.guild || message.author.id === bot.user.id) return ;
+	if (message.content === '!kill') {
+		if (!isAdmin(message)) {
+			message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébien.');
+			return ;
+		}
+		killConfirm = true;
+		message.channel.sendMessage('Whoah, t\' sûr de vouloir faire ça bro ?! [y/n]');
+	} else if (message.content === 'y' && killConfirm && isAdmin(message)) {
+		message.channel.sendMessage('Ok boss, j\'y vais, à la prochaine !').
+		then(msg => {
+			bot.destroy();
+		});
+	} else {
+		killConfirm = false;
+		return ;
+	}
 });
 
 bot.login(config.token);
