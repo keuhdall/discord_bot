@@ -23,6 +23,10 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
 });
 
+/*
+Function that print a help message with the description of the commands
+Command : !help
+*/
 bot.on("message", message => {
 	if (!message.guild) return ;
 	if (message.content === "!help")
@@ -42,7 +46,7 @@ bot.on("message", message => {
 /*
 Function that clean messages
 Command : !clean [option] [number]
-Available options : -c -t
+Available options : -c -t (-t not implented yet)
 */
 bot.on("message", message => {
 		if (!message.guild) return ;
