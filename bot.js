@@ -9,6 +9,7 @@ var spamMembers = [];
 var spamRoleTime = 15;
 
 bot.on("ready", function () {
+	bot.user.setGame('Présidentielles 2017');
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
 });
 
@@ -54,6 +55,18 @@ function isAdmin(message) {
 }
 
 /*
+ Function that returns the percentage of uppercase character in a string
+ */
+function getUppercasePercentage (content) {
+	let countUppercase = 0;
+	for (var i = 0; i < content.length; i++) {
+		if (content[i] === content[i].toUpperCase())
+			countUppercase++;
+	}
+	return ((countUppercase / content.length) * 100);
+}
+
+/*
 Function that print a help message with the description of the commands
 Command : !help
 */
@@ -84,7 +97,6 @@ bot.on("message", message => {
 		var tab = message.content.split(" ");
 		if (tab[0] !== "!clean") return ;
 		if (tab[1] === "-c" && tab[2]) {
-			//if (message.author.id !== navet && message.author.id !== keuhdall) {
 			if (!message.member.roles.has(authorizedRole.id)) {
 				message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 				return ;
@@ -178,7 +190,7 @@ bot.on("message", message => {
 			if (message.content !== msg[i].content)
 				same = false;
 		}
-		if (same === true) {
+		if (same === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
 			var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 			spamMembers.push(spammer);
 			message.member.setRoles(spamRole);
