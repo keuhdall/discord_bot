@@ -41,6 +41,9 @@ function checkSpam() {
 	}
 }
 
+/*
+ Function that check if the user that issued a message is admin or not.
+ */
 function isAdmin(message) {
 	let Moi = message.guild.roles.find('name', 'Moi');
 	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
