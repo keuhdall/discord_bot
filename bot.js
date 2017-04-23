@@ -54,13 +54,17 @@ function isAdmin(message) {
 		return false
 }
 
+function isAlpha(c) {
+	return (/^[A-Z]$/i.test(c));
+}
+
 /*
  Function that returns the percentage of uppercase character in a string
  */
 function getUppercasePercentage (content) {
 	let countUppercase = 0;
 	for (var i = 0; i < content.length; i++) {
-		if (content[i] === content[i].toUpperCase())
+		if (content[i] === content[i].toUpperCase() && isAlpha(content[i]))
 			countUppercase++;
 	}
 	return ((countUppercase / content.length) * 100);
