@@ -194,11 +194,11 @@ bot.on("message", message => {
 			if (message.content !== msg[i].content)
 				same = false;
 		}
-		if (same === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
+		if (same === true) {// || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
 			var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 			spamMembers.push(spammer);
 			message.member.setRoles(spamRole);
-			message.author.sendMessage('T\'en a pas marre de spam espèce de sous-race ? Continues comme ça et je te fout la PLS de ta vie batard !');
+			message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
 		}
 	}).catch(console.error());
 });
@@ -228,7 +228,7 @@ bot.on("message", message => {
 	if (!message.guild || message.author.id === bot.user.id) return ;
 	if (message.content === '!kill') {
 		if (!isAdmin(message)) {
-			message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébien.');
+			message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
 			return ;
 		}
 		killConfirm = true;
