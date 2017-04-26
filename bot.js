@@ -7,6 +7,7 @@ const keuhdall = '100335365998538752';
 const navet = '94045969099792384';
 var spamMembers = [];
 var spamRoleTime = 15;
+var spamLevel = 0;
 
 bot.on("ready", function () {
 	bot.user.setGame('Présidentielles 2017');
@@ -28,7 +29,7 @@ bot.on('guildMemberRemove', ({user, guild}) => {
 
 /*
  Function called every minutes that will check if the members belonging to spamRole are able to recover their real role
- */
+*/
 function checkSpam() {
 	let potager = bot.guilds.find('name', 'Potager');
 	let spamRole = [];
@@ -44,7 +45,7 @@ function checkSpam() {
 
 /*
  Function that check if the user that issued a message is admin or not.
- */
+*/
 function isAdmin(message) {
 	let Moi = message.guild.roles.find('name', 'Moi');
 	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
@@ -60,7 +61,7 @@ function isAlpha(c) {
 
 /*
  Function that returns the percentage of uppercase character in a string
- */
+*/
 function getUppercasePercentage (content) {
 	let countUppercase = 0;
 	for (var i = 0; i < content.length; i++) {
@@ -180,7 +181,7 @@ bot.on("message", message => {
 
 /*
  Function that prevent spam. Will chenge user's role and deprive him from his permissions.
- */
+*/
 bot.on("message", message => {
 	if (!message.guild) return ;
 	if (message.author.id === bot.user.id || isAdmin(message)) return ;
@@ -194,19 +195,63 @@ bot.on("message", message => {
 			if (message.content !== msg[i].content)
 				same = false;
 		}
-		if (same === true) {// || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
-			var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
-			spamMembers.push(spammer);
-			message.member.setRoles(spamRole);
-			message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+		switch (spamLevel)
+		{
+			case 0:
+				break ;
+			case 1:
+				if (same === true) {
+					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					spamMembers.push(spammer);
+					message.member.setRoles(spamRole);
+					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+				}
+				break ;
+			case 2:
+				console.log('not implented yet');
+				break ;
+			case 3:
+				if (same === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
+					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					spamMembers.push(spammer);
+					message.member.setRoles(spamRole);
+					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+				}
+				break ;
+			default:
+				console.log('ERROR : the tolerance level has been set to a a wtong value');
 		}
 	}).catch(console.error());
 });
 
 /*
+ Function that allows an admin to change the tolerance level of the bot towards spam.
+ Command : !spamlevel [option] [level]
+ Options : -d to display the current tolerance level ; -e to edit the tolerance level
+*/
+bot.on("message", message => {
+	if (!message.guild) return ;
+	var tab = message.content.split(" ");
+	if (tab[0] === '!spamlevel' && isAdmin(message))
+	{
+		if (tab[1] === '-d')
+			message.channel.sendMessage(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
+		else if (tab[1] === '-e') {
+			if (!isNaN(tab[2]) && tab[2] >= 0 && tab[2] <= 3) {
+				spamLevel = tab[2];
+				message.channel.sendMessage(`Le niveau de spam a bien été réglé à ${spamLevel}`);
+			} else
+				message.channel.sendMessage(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[2]} n'est pas une valeur correcte`);
+		} else {
+			message.channel.sendMessage('Erreur : option invalide.');
+		}
+	}
+});
+
+/*
  Function that allows me to recover my permissions is i mess to much with the bot
  Command : !member [only works with my ID ; you have to edit the code]
- */
+*/
 bot.on("message", message => {
 	let potager = bot.guilds.find('name', 'Potager');
 	let vegetable = potager.roles.find('name', 'Légume');
@@ -222,7 +267,7 @@ bot.on("message", message => {
 /*
  Function that will kill the bot. It'll have to be restarted through node.
  Command : !kill
- */
+*/
 var killConfirm = false;
 bot.on("message", message => {
 	if (!message.guild || message.author.id === bot.user.id) return ;
@@ -251,7 +296,7 @@ bot.on("message", message => {
  Function that allows an admin to edit the time in the spamRole
  Command : !spamtime [option] [time (optionnal)]
  Options : -d (display) Will display the current spamRoleTime ; -e (edit) Will edit the current spamRoleTime with the one given.
- */
+*/
 bot.on("message", message => {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
