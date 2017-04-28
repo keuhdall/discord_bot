@@ -8,6 +8,9 @@ const navet = '94045969099792384';
 var spamMembers = [];
 var spamRoleTime = 15;
 var spamLevel = 0;
+var msgInterval = 1000;
+var tmpMsg;
+var isSpam;
 
 bot.on("ready", function () {
 	bot.user.setGame('Présidentielles 2017');
@@ -71,12 +74,30 @@ function getUppercasePercentage (content) {
 	return ((countUppercase / content.length) * 100);
 }
 
+function checkMessageTime(message)
+{
+	if (!tmpMsg) {
+		tmpMsg = message;
+		isSpam = false;
+		return ;
+	}
+	if (tmpMsg.author === message.author) {
+		if (message.createdTimestamp - tmpMsg.createdTimestamp > msgInterval) {
+			isSpam = true;
+		} else {
+			isSpam = false;
+		}
+	}
+	tmpMsg = message;
+}
+
 /*
 Function that print a help message with the description of the commands
 Command : !help
 */
 bot.on("message", message => {
 	if (!message.guild) return ;
+	checkMessageTime(message);
 	if (message.content === "!help")
 		message.channel.sendMessage(`Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
@@ -195,7 +216,7 @@ bot.on("message", message => {
 			if (message.content !== msg[i].content)
 				same = false;
 		}
-		switch (spamLevel)
+		switch (parseInt(spamLevel))
 		{
 			case 0:
 				break ;
@@ -208,10 +229,15 @@ bot.on("message", message => {
 				}
 				break ;
 			case 2:
-				console.log('not implented yet');
+				if (same === true || isSpam === true) {
+					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					spamMembers.push(spammer);
+					message.member.setRoles(spamRole);
+					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+				}
 				break ;
 			case 3:
-				if (same === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
+				if (same === true || isSpam === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
@@ -220,6 +246,8 @@ bot.on("message", message => {
 				break ;
 			default:
 				console.log('ERROR : the tolerance level has been set to a a wtong value');
+				console.log(`Current tolerance level : ${spamLevel}`);
+				break ;
 		}
 	}).catch(console.error());
 });
@@ -300,8 +328,7 @@ bot.on("message", message => {
 bot.on("message", message => {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
-	if (tab[0] === '!spamtime')
-	{
+	if (tab[0] === '!spamtime') {
 		if (!isAdmin(message)) {
 			message.channel.sendMessage('T\'as pas le droit. Dégage.');
 			return ;
@@ -315,6 +342,27 @@ bot.on("message", message => {
 			} else if (tab[1] === '-d')
 				message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
 			else
+				message.channel.sendMessage('Erreur de syntaxe');
+		}
+	}
+});
+
+bot.on("message", message => {
+	if (!message.guild) return ;
+	var tab = message.content.split(" ");
+	if (tab[0] === '!msginterval') {
+		if (!isAdmin(message)) {
+			message.channel.sendMessage('T\'as pas le droit gros caca.');
+			return ;
+		} else {
+			if (tab[1] === '-d') {
+				message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
+			} else if (tab[1] === '-e'){
+				if (tab[2])
+					message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msginterval} millisecondes`);
+				else
+					message.channel.sendMessage('Tou a oublié dé préciser lé nombre dé millisecondes señor');
+			} else
 				message.channel.sendMessage('Erreur de syntaxe');
 		}
 	}
