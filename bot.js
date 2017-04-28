@@ -347,6 +347,11 @@ bot.on("message", message => {
 	}
 });
 
+/*
+ Function that sets the meximum interval of time between 2 messages for the same author
+ Command : !msginterval
+ Options : -d (display) Will display the current msgInterval ; -e (edit) Will edit the current msgInterval with the one given.
+*/
 bot.on("message", message => {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
