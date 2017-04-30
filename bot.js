@@ -14,17 +14,19 @@ var msgInterval = 1000;
 var tmpMsg;
 var isSpam;
 
-commands['!help'] = handleHelp;
-commands['!about'] = handleAbout;
-commands['!nogord'] = handleNogord;
-commands['!clean'] = handleClean;
-commands['!msg'] = handleMsg;
-commands['!roll'] = handleRoll;
-commands['!spamlevel'] = handleSpamlevel;
-commands['!member'] = handleMember;
-commands['!kill'] = handleKill;
-commands['!spamtime'] = handleClean;
-commands['!msginterval'] = handleMsginterval;
+commands['!help']			= handleHelp;
+commands['!about']			= handleAbout;
+commands['!nogord']			= handleNogord;
+commands['!clean']			= handleClean;
+commands['!msg']			= handleMsg;
+commands['!roll']			= handleRoll;
+commands['!spamlevel']		= handleSpamlevel;
+commands['!member']			= handleMember;
+commands['!kill']			= handleKill;
+commands['!spamtime']		= handleClean;
+commands['!msginterval']	= handleMsginterval;
+commands['!join']			= handleJoin;
+commands['!leave']			= handleLeave;
 
 /*
 Function that print a help message with the description of the commands
@@ -307,7 +309,33 @@ function handleSpam(message) {
 	}).catch(console.error());
 }
 
+var botVoiceChannel = null;
+/*
+ Function that makes the bot join your voice channel
+ Commamd : !join
+*/
+function handleJoin(message) {
+	if (message.content !== '!join' || !message.guild) return ;
+	if (!message.member.voiceChannel)
+		message.channel.sendMessage('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
+	else {
+		botVoiceChannel = message.member.voiceChannel;
+		message.member.voiceChannel.join();
+	}
+}
 
+/*
+ Function that makes the bot leave the voice channel he is currently in
+ Command : !leave
+*/
+function handleLeave(message) {
+	if (!botVoiceChannel)
+		message.channel.sendMessage('Il faut que je soit dans un channel vocal pour utilier cette commande');
+	else {
+		botVoiceChannel.leave();
+		botVoiceChannel = null;
+	}
+}
 
 /*
  Function called every minutes that will check if the members belonging to spamRole are able to recover their real role
