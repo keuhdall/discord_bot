@@ -138,16 +138,14 @@ function handleSpamlevel(message) {
 	var tab = message.content.split(" ");
 	if (isAdmin(message))
 	{
-		if (tab[1] === '-d')
+		if (!tab[1])
 			message.channel.sendMessage(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
-		else if (tab[1] === '-e') {
-			if (!isNaN(tab[2]) && tab[2] >= 0 && tab[2] <= 3) {
-				spamLevel = tab[2];
+		else {
+			if (!isNaN(tab[1]) && tab[1] >= 0 && tab[1] <= 3) {
+				spamLevel = tab[1];
 				message.channel.sendMessage(`Le niveau de spam a bien été réglé à ${spamLevel}`);
 			} else
-				message.channel.sendMessage(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[2]} n'est pas une valeur correcte`);
-		} else {
-			message.channel.sendMessage('Erreur : option invalide.');
+				message.channel.sendMessage(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[1]} n'est pas une valeur correcte`);
 		}
 	}
 }
@@ -207,16 +205,11 @@ function handleSpamtime(message) {
 		message.channel.sendMessage('T\'as pas le droit. Dégage.');
 		return ;
 	} else {
-		if (tab[1] === '-e') {
-			if (tab[2]) {
-				spamRoleTime = tab[2];
-				message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
-			} else
-				message.channel.sendMessage('T\'as oublié de préciser le nouveau temps, boss');
-		} else if (tab[1] === '-d')
+		if (tab[1]) {
+			spamRoleTime = tab[1];
+			message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+		} else
 			message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
-		else
-			message.channel.sendMessage('Erreur de syntaxe');
 	}
 }
 
@@ -232,15 +225,12 @@ function handleMsginterval(message) {
 		message.channel.sendMessage('T\'as pas le droit gros caca.');
 		return ;
 	} else {
-		if (tab[1] === '-d') {
+		if (!tab[1]) {
 			message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
-		} else if (tab[1] === '-e'){
-			if (tab[2])
-				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
-			else
-				message.channel.sendMessage('Tou a oublié dé préciser lé nombre dé millisecondes señor');
-		} else
-			message.channel.sendMessage('Erreur de syntaxe');
+		} else {
+			msgInterval = tab[1];
+			message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
+		}
 	}
 }
 
@@ -412,7 +402,7 @@ function checkMessageTime(message)
 		return ;
 	}
 	if (tmpMsg.author === message.author) {
-		if (message.createdTimestamp - tmpMsg.createdTimestamp > msgInterval) {
+		if (message.createdTimestamp - tmpMsg.createdTimestamp < msgInterval) {
 			isSpam = true;
 		} else {
 			isSpam = false;
