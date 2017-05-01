@@ -1,5 +1,7 @@
 const config = require('./config.js');
 const Discord = require('discord.js');
+const ytdl = require('ytdl-core');
+const streamOptions = { seek: 0, volume: 1 };
 const bot = new Discord.Client();
 const kraive = '94011401940504576';
 const fica = '166226448598695936';
@@ -23,7 +25,7 @@ commands['!roll']			= handleRoll;
 commands['!spamlevel']		= handleSpamlevel;
 commands['!member']			= handleMember;
 commands['!kill']			= handleKill;
-commands['!spamtime']		= handleClean;
+commands['!spamtime']		= handleSpamtime;
 commands['!msginterval']	= handleMsginterval;
 commands['!join']			= handleJoin;
 commands['!leave']			= handleLeave;
@@ -320,7 +322,12 @@ function handleJoin(message) {
 		message.channel.sendMessage('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
 	else {
 		botVoiceChannel = message.member.voiceChannel;
-		message.member.voiceChannel.join();
+		message.member.voiceChannel.join()
+		.then(connection => {
+			const stream = ytdl('https://www.youtube.com/watch?v=VLUm-zMPkQM', {filter : 'audioonly'});
+			const dispatcher = connection.playStream(stream, streamOptions);
+		})
+		.catch(console.error());
 	}
 }
 
