@@ -62,7 +62,6 @@ function handleClean(message) {
 	if (!message.guild) return ;
 	let authorizedRole = message.guild.roles.find('name', 'Légume');
 	var tab = message.content.split(" ");
-	if (tab[0] !== "!clean") return ;
 	if (tab[1] === "-c" && tab[2]) {
 		if (!message.member.roles.has(authorizedRole.id)) {
 			message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
@@ -97,7 +96,7 @@ Command : !msg [index of the message you zqnt to display]
 */
 function handleMsg(message) {
 	var tab = message.content.split(" ");
-	if (tab[0] !== "!msg" || !tab[1] || !message.guild) return ;
+	if (!tab[1] || !message.guild) return ;
 	tab[1]++;
 	message.channel.fetchMessages({limit : tab[1]})
 	.then(messages => {
@@ -113,7 +112,7 @@ Command : !roll [numbers of rolls]d[size of the dice]
 */
 function handleRoll(message) {
 	var tmp_cmd = message.content.split(' ');
-	if (tmp_cmd[0] !== '!roll' || !tmp_cmd[1] || !message.guild) return ;
+	if (!tmp_cmd[1] || !message.guild) return ;
 	var tmp_dice = tmp_cmd[1].split('d');
 	var values = new Array();
 	for (var i = 0; i < tmp_dice[0]; i ++)
@@ -136,7 +135,7 @@ function handleRoll(message) {
 function handleSpamlevel (message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
-	if (tab[0] === '!spamlevel' && isAdmin(message))
+	if (isAdmin(message))
 	{
 		if (tab[1] === '-d')
 			message.channel.sendMessage(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
@@ -153,7 +152,7 @@ function handleSpamlevel (message) {
 }
 
 /*
- Function that allows me to recover my permissions is i mess to much with the bot
+ Function that allows me to recover my permissions if i mess to much with the bot
  Command : !member [only works with my ID ; you have to edit the code]
 */
 function handleMember (message) {
@@ -163,7 +162,7 @@ function handleMember (message) {
 	.then(member => {
 		let fairRole = Array();
 		fairRole.push(vegetable);
-		if (message.content === '!member' && message.author.id === keuhdall)
+		if (message.author.id === keuhdall)
 			member.setRoles(fairRole);
 	})
 }
@@ -203,22 +202,20 @@ function handleKill (message) {
 function handleSpamtime(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
-	if (tab[0] === '!spamtime') {
-		if (!isAdmin(message)) {
-			message.channel.sendMessage('T\'as pas le droit. Dégage.');
-			return ;
-		} else {
-			if (tab[1] === '-e') {
-				if (tab[2]) {
-					spamRoleTime = tab[2];
-					message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
-				} else
-					message.channel.sendMessage('T\'as oublié de préciser le nouveau temps, boss');
-			} else if (tab[1] === '-d')
-				message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
-			else
-				message.channel.sendMessage('Erreur de syntaxe');
-		}
+	if (!isAdmin(message)) {
+		message.channel.sendMessage('T\'as pas le droit. Dégage.');
+		return ;
+	} else {
+		if (tab[1] === '-e') {
+			if (tab[2]) {
+				spamRoleTime = tab[2];
+				message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+			} else
+				message.channel.sendMessage('T\'as oublié de préciser le nouveau temps, boss');
+		} else if (tab[1] === '-d')
+			message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
+		else
+			message.channel.sendMessage('Erreur de syntaxe');
 	}
 }
 
@@ -230,21 +227,19 @@ function handleSpamtime(message) {
 function handleMsginterval(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
-	if (tab[0] === '!msginterval') {
-		if (!isAdmin(message)) {
-			message.channel.sendMessage('T\'as pas le droit gros caca.');
-			return ;
-		} else {
-			if (tab[1] === '-d') {
-				message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
-			} else if (tab[1] === '-e'){
-				if (tab[2])
-					message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msginterval} millisecondes`);
-				else
-					message.channel.sendMessage('Tou a oublié dé préciser lé nombre dé millisecondes señor');
-			} else
-				message.channel.sendMessage('Erreur de syntaxe');
-		}
+	if (!isAdmin(message)) {
+		message.channel.sendMessage('T\'as pas le droit gros caca.');
+		return ;
+	} else {
+		if (tab[1] === '-d') {
+			message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
+		} else if (tab[1] === '-e'){
+			if (tab[2])
+				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msginterval} millisecondes`);
+			else
+				message.channel.sendMessage('Tou a oublié dé préciser lé nombre dé millisecondes señor');
+		} else
+			message.channel.sendMessage('Erreur de syntaxe');
 	}
 }
 
@@ -319,7 +314,7 @@ var botConnection = null;
  Commamd : !join
 */
 function handleJoin(message) {
-	if (message.content !== '!join' || !message.guild) return ;
+	if (!message.guild) return ;
 	if (!message.member.voiceChannel)
 		message.channel.sendMessage('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
 	else {
