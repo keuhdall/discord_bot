@@ -13,6 +13,7 @@ var spamMembers = [];
 var spamRoleTime = 15;
 var spamLevel = 0;
 var msgInterval = 1000;
+var killConfirm = false;
 var tmpMsg;
 var isSpam;
 
@@ -132,7 +133,7 @@ function handleRoll(message) {
  Command : !spamlevel [option] [level]
  Options : -d to display the current tolerance level ; -e to edit the tolerance level
 */
-function handleSpamlevel (message) {
+function handleSpamlevel(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
 	if (isAdmin(message))
@@ -155,7 +156,7 @@ function handleSpamlevel (message) {
  Function that allows me to recover my permissions if i mess to much with the bot
  Command : !member [only works with my ID ; you have to edit the code]
 */
-function handleMember (message) {
+function handleMember(message) {
 	let potager = bot.guilds.find('name', 'Potager');
 	let vegetable = potager.roles.find('name', 'Légume');
 	let memberKeuhdall = potager.fetchMember(message.author)
@@ -171,16 +172,19 @@ function handleMember (message) {
  Function that will kill the bot. It'll have to be restarted through node.
  Command : !kill
 */
-function handleKill (message) {
-	if (!message.guild || message.author.id === bot.user.id) return ;
-	if (message.content === '!kill') {
-		if (!isAdmin(message)) {
-			message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
-			return ;
-		}
-		killConfirm = true;
-		message.channel.sendMessage('Whoah, t\' sûr de vouloir faire ça bro ?! [y/n]');
-	} else if (message.content === 'y' && killConfirm && isAdmin(message)) {
+function handleKill(message) {
+	if (!message.guild ) return ;
+	if (!isAdmin(message)) {
+		message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
+		return ;
+	}
+	killConfirm = true;
+	message.channel.sendMessage('Whoah, t\'es sûr de vouloir faire ça bro ?! [y/n]');
+}
+
+function checkConfirm(message)
+{
+	if (message.content === 'y' && killConfirm && isAdmin(message)) {
 		message.channel.sendMessage('Ok boss, j\'y vais, à la prochaine !').
 		then(msg => {
 			bot.destroy();
@@ -188,9 +192,6 @@ function handleKill (message) {
 	} else if (message.content === 'n' && killConfirm && isAdmin(message)) {
 		message.channel.sendMessage('Ouf, merci !');
 		killConfirm = false;
-	} else {
-		killConfirm = false;
-		return ;
 	}
 }
 
@@ -423,6 +424,10 @@ function checkMessageTime(message)
 bot.on("message", message => {
 	handleReactions(message);
 	handleSpam(message);
+	if (message.content === 'y' || message.content === 'n')
+		checkConfirm(message);
+	else if (message.author.id !== bot.user.id)
+		killConfirm = false;
 	var tab = message.content.split(' ');
 	if (commands[tab[0]])
 		commands[tab[0]](message);
