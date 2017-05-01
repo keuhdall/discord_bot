@@ -130,8 +130,7 @@ function handleRoll(message) {
 
 /*
  Function that allows an admin to change the tolerance level of the bot towards spam.
- Command : !spamlevel [option] [level]
- Options : -d to display the current tolerance level ; -e to edit the tolerance level
+ Command : !spamlevel [level] (optionnal)
 */
 function handleSpamlevel(message) {
 	if (!message.guild) return ;
@@ -195,8 +194,7 @@ function checkConfirm(message)
 
 /*
  Function that allows an admin to edit the time in the spamRole
- Command : !spamtime [option] [time (optionnal)]
- Options : -d (display) Will display the current spamRoleTime ; -e (edit) Will edit the current spamRoleTime with the one given.
+ Command : !spamtime [time] (optionnal)
 */
 function handleSpamtime(message) {
 	if (!message.guild) return ;
@@ -215,8 +213,7 @@ function handleSpamtime(message) {
 
 /*
  Function that sets the meximum interval of time between 2 messages for the same author
- Command : !msginterval
- Options : -d (display) Will display the current msgInterval ; -e (edit) Will edit the current msgInterval with the one given.
+ Command : !msginterval [interval] (optionnal)
 */
 function handleMsginterval(message) {
 	if (!message.guild) return ;
