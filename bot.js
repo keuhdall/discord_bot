@@ -29,6 +29,7 @@ commands['!spamtime']		= handleSpamtime;
 commands['!msginterval']	= handleMsginterval;
 commands['!join']			= handleJoin;
 commands['!leave']			= handleLeave;
+commands['!play']			= handlePlay;
 
 /*
 Function that print a help message with the description of the commands
@@ -312,6 +313,7 @@ function handleSpam(message) {
 }
 
 var botVoiceChannel = null;
+var botConnection = null;
 /*
  Function that makes the bot join your voice channel
  Commamd : !join
@@ -324,10 +326,27 @@ function handleJoin(message) {
 		botVoiceChannel = message.member.voiceChannel;
 		message.member.voiceChannel.join()
 		.then(connection => {
-			const stream = ytdl('https://www.youtube.com/watch?v=VLUm-zMPkQM', {filter : 'audioonly'});
-			const dispatcher = connection.playStream(stream, streamOptions);
+			botConnection = connection;
 		})
 		.catch(console.error());
+	}
+}
+
+/*
+ Function that makes the bor play a song provided through a youtube link
+ Command : !play [link]
+ */
+function handlePlay(message) {
+	var tab = message.content.split(' ');
+	if (!tab[1]) {
+		message.channel.sendMessage('Il faut me passer un lien youtube !');
+		return ;
+	}
+	if (!botConnection)
+		message.channel.sendMessage('Il faut que je soit dans un channel vocal pour utilier cette commande');
+	else {
+		const stream = ytdl(tab[1], {filter : 'audioonly'});
+		botConnection.playStream(stream, streamOptions);
 	}
 }
 
@@ -341,6 +360,7 @@ function handleLeave(message) {
 	else {
 		botVoiceChannel.leave();
 		botVoiceChannel = null;
+		botConnection = null;
 	}
 }
 
