@@ -236,7 +236,7 @@ function handleMsginterval(message) {
 			message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
 		} else if (tab[1] === '-e'){
 			if (tab[2])
-				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msginterval} millisecondes`);
+				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
 			else
 				message.channel.sendMessage('Tou a oublié dé préciser lé nombre dé millisecondes señor');
 		} else
@@ -423,6 +423,7 @@ function checkMessageTime(message)
 
 bot.on("message", message => {
 	handleReactions(message);
+	checkMessageTime(message);
 	handleSpam(message);
 	if (message.content === 'y' || message.content === 'n')
 		checkConfirm(message);
