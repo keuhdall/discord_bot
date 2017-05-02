@@ -210,7 +210,7 @@ function handleSpamtime(message) {
 				spamRoleTime = tab[1];
 				message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
 			} else
-				message.channel.sendMessage('Il faut fournir une valeur numérique, sinon ça ne risque pas de marcher !! ;)');
+				message.channel.sendMessage('Erreur de syntaxe');
 		} else
 			message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
 	}
@@ -230,8 +230,11 @@ function handleMsginterval(message) {
 		if (!tab[1]) {
 			message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
 		} else {
-			msgInterval = tab[1];
-			message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
+			if (!isNaN(tab[1])) {
+				msgInterval = tab[1];
+				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
+			} else
+				message.channel.sendMessage('Erreur de syntaxe');
 		}
 	}
 }
