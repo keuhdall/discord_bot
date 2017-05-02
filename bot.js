@@ -63,7 +63,7 @@ function handleClean(message) {
 	if (!message.guild) return ;
 	let authorizedRole = message.guild.roles.find('name', 'Légume');
 	var tab = message.content.split(" ");
-	if (tab[1] === "-c" && tab[2]) {
+	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
 		if (!message.member.roles.has(authorizedRole.id)) {
 			message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 			return ;
@@ -77,15 +77,17 @@ function handleClean(message) {
 		.catch(console.error());
 		message.channel.sendMessage(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
 	}
-	else if ( tab[1] === "-t" && tab[2])
+	else if ( tab[1] === "-t" && tab[2] && !isNaN(tab[2]))
 	{
 		if (!message.member.roles.has(authorizedRole.id)) {
 			message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
 			return ;
 		}
 		if (tab[2] > 30) tab[2] = 30;
+		tab[2] *= 60000;
 		console.log(message.channel.createdAt.toString());
-		//message.channel.fetchMessages({after : })
+
+		message.channel.fetchMessages({after : 1})
 	}
 	else
 		message.channel.sendMessage('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
@@ -204,8 +206,11 @@ function handleSpamtime(message) {
 		return ;
 	} else {
 		if (tab[1]) {
-			spamRoleTime = tab[1];
-			message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+			if (!isNaN(tab[1])) {
+				spamRoleTime = tab[1];
+				message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+			} else
+				message.channel.sendMessage('Il faut fournir une valeur numérique, sinon ça ne risque pas de marcher !! ;)');
 		} else
 			message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
 	}
