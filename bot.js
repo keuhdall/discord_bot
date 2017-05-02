@@ -65,7 +65,7 @@ function handleClean(message) {
 	var tab = message.content.split(" ");
 	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
 		if (!message.member.roles.has(authorizedRole.id)) {
-			message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
+			message.channel.sendMessage('Hep hep hep, t\'as pas le droit.');
 			return ;
 		}
 		if (tab[2] > 50) tab[2] = 50;
@@ -80,7 +80,7 @@ function handleClean(message) {
 	else if ( tab[1] === "-t" && tab[2] && !isNaN(tab[2]))
 	{
 		if (!message.member.roles.has(authorizedRole.id)) {
-			message.channel.sendMessage('Hep hep hep, t\'as pas les droits sale retard.');
+			message.channel.sendMessage('Hep hep hep, t\'as pas le droit.');
 			return ;
 		}
 		if (tab[2] > 30) tab[2] = 30;
@@ -202,7 +202,7 @@ function handleSpamtime(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
 	if (!isAdmin(message)) {
-		message.channel.sendMessage('T\'as pas le droit. Dégage.');
+		message.channel.sendMessage('T\'as pas le droit.');
 		return ;
 	} else {
 		if (tab[1]) {
@@ -224,7 +224,7 @@ function handleMsginterval(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
 	if (!isAdmin(message)) {
-		message.channel.sendMessage('T\'as pas le droit gros caca.');
+		message.channel.sendMessage('T\'as pas le droit.');
 		return ;
 	} else {
 		if (!tab[1]) {
@@ -260,7 +260,7 @@ function handleSpam(message) {
 	message.channel.fetchMessages({limit : 4})
 	.then(messages => {
 		let spamRole = Array();
-		spamRole.push(message.guild.roles.find('name', 'Spammeur de merde'));
+		spamRole.push(message.guild.roles.find('name', 'Spammeur'));
 		var msg = messages.array();
 		var same = true;
 		for (var i = 1; i < 4; i++) {
@@ -276,7 +276,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			case 2:
@@ -284,7 +284,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			case 3:
@@ -292,7 +292,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam espèce de sous-race ? Mange ta PLS de ${spamRoleTime} minute(s)`);
+					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			default:
@@ -361,7 +361,7 @@ function handleLeave(message) {
 function checkSpam() {
 	let potager = bot.guilds.find('name', 'Potager');
 	let spamRole = [];
-	spamRole.push(potager.roles.find('name', 'Spammeur de merde'));
+	spamRole.push(potager.roles.find('name', 'Spammeur'));
 	for (var i = 0; i < spamMembers.length; i++) {
 			spamMembers[i].time++;
 		if (spamMembers[i].time > spamRoleTime) {
@@ -440,11 +440,11 @@ bot.on("disconnected", function () {
 });
 
 bot.on('guildMemberAdd', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`Yo <@${user.id}>, tiens toi à carreau petit fdp sinon la PLS sera pour toi gros batard.`);
+	guild.defaultChannel.sendMessage(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
 });
 
 bot.on('guildMemberRemove', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`Cette sous race de <@${user.id}> viens de se faire mettre en PLS car il ne méritait pas de nous cotoyer, on a un haut standing ici.`);
+	guild.defaultChannel.sendMessage(`<@${user.id}> viens de quitter.`);
 });
 
 setInterval(checkSpam, 60000);
