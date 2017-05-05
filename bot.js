@@ -37,7 +37,7 @@ Function that print a help message with the description of the commands
 Command : !help
 */
 function handleHelp(message) {
-	message.channel.sendMessage(`Voici la liste des commandes :\`\`\`
+	message.channel.send(`Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
 - !msg : affiche le n-ieme message du channel
@@ -47,11 +47,11 @@ function handleHelp(message) {
 }
 
 function handleAbout(message) {
-	message.channel.sendMessage(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
+	message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
 }
 
 function handleNogord(message) {
-	message.channel.sendMessage(`Qui n'a pas down Nogord ? <@${kraive}>`);
+	message.channel.send(`Qui n'a pas down Nogord ? <@${kraive}>`);
 }
 
 /*
@@ -65,7 +65,7 @@ function handleClean(message) {
 	var tab = message.content.split(" ");
 	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
 		if (!message.member.roles.has(authorizedRole.id)) {
-			message.channel.sendMessage('Hep hep hep, t\'as pas le droit.');
+			message.channel.send('Hep hep hep, t\'as pas le droit.');
 			return ;
 		}
 		if (tab[2] > 50) tab[2] = 50;
@@ -73,24 +73,36 @@ function handleClean(message) {
 		message.channel.fetchMessages({limit : tab[2]})
 		.then(messages => {
 			message.channel.bulkDelete(messages);
+			message.channel.send(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
 		})
 		.catch(console.error());
-		message.channel.sendMessage(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
 	}
 	else if ( tab[1] === "-t" && tab[2] && !isNaN(tab[2]))
 	{
+		return ;//WIP
 		if (!message.member.roles.has(authorizedRole.id)) {
-			message.channel.sendMessage('Hep hep hep, t\'as pas le droit.');
+			message.channel.send('Hep hep hep, t\'as pas le droit.');
 			return ;
 		}
 		if (tab[2] > 30) tab[2] = 30;
 		tab[2] *= 60000;
-		console.log(message.channel.createdAt.toString());
-
-		message.channel.fetchMessages({after : 1})
+		var tmpFetchMsg = message.createdTimestamp;
+		while (tmpFetchMsg > message.createdTimestamp - tab[2])
+		{
+			console.log(tmpFetchMsg);
+			message.channel.fetchMessages({limit : 2})
+			.then(messages => {
+				let tmpArray = new Array();
+				tmpArray = messages.array();
+				tmpFetchMsg = tmpArray[1].createdTimestamp
+				tmpArray[1].delete();
+			})
+			.catch(console.error());
+		}
+		message.delete();
 	}
 	else
-		message.channel.sendMessage('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
+		message.channel.send('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
 }
 
 /*
@@ -104,7 +116,7 @@ function handleMsg(message) {
 	message.channel.fetchMessages({limit : tab[1]})
 	.then(messages => {
 		var msg = messages.array();
-		message.channel.sendMessage(`${msg[tab[1] - 1].content}`);
+		message.channel.send(`${msg[tab[1] - 1].content}`);
 	})
 	.catch(console.error());
 }
@@ -127,7 +139,7 @@ function handleRoll(message) {
 		if (j != values.length - 1)
 			str += ' ; ';
 	}
-	message.channel.sendMessage(`${str}`);
+	message.channel.send(`${str}`);
 }
 
 /*
@@ -140,13 +152,13 @@ function handleSpamlevel(message) {
 	if (isAdmin(message))
 	{
 		if (!tab[1])
-			message.channel.sendMessage(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
+			message.channel.send(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
 		else {
 			if (!isNaN(tab[1]) && tab[1] >= 0 && tab[1] <= 3) {
 				spamLevel = tab[1];
-				message.channel.sendMessage(`Le niveau de spam a bien été réglé à ${spamLevel}`);
+				message.channel.send(`Le niveau de spam a bien été réglé à ${spamLevel}`);
 			} else
-				message.channel.sendMessage(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[1]} n'est pas une valeur correcte`);
+				message.channel.send(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[1]} n'est pas une valeur correcte`);
 		}
 	}
 }
@@ -174,22 +186,22 @@ function handleMember(message) {
 function handleKill(message) {
 	if (!message.guild ) return ;
 	if (!isAdmin(message)) {
-		message.channel.sendMessage('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
+		message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
 		return ;
 	}
 	killConfirm = true;
-	message.channel.sendMessage('Whoah, t\'es sûr de vouloir faire ça bro ?! [y/n]');
+	message.channel.send('Whoah, t\'es sûr de vouloir faire ça bro ?! [y/n]');
 }
 
 function checkConfirm(message)
 {
 	if (message.content === 'y' && killConfirm && isAdmin(message)) {
-		message.channel.sendMessage('Ok boss, j\'y vais, à la prochaine !').
+		message.channel.send('Ok boss, j\'y vais, à la prochaine !').
 		then(msg => {
 			bot.destroy();
 		});
 	} else if (message.content === 'n' && killConfirm && isAdmin(message)) {
-		message.channel.sendMessage('Ouf, merci !');
+		message.channel.send('Ouf, merci !');
 		killConfirm = false;
 	}
 }
@@ -202,17 +214,17 @@ function handleSpamtime(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
 	if (!isAdmin(message)) {
-		message.channel.sendMessage('T\'as pas le droit.');
+		message.channel.send('T\'as pas le droit.');
 		return ;
 	} else {
 		if (tab[1]) {
 			if (!isNaN(tab[1])) {
 				spamRoleTime = tab[1];
-				message.channel.sendMessage(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
+				message.channel.send(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
 			} else
-				message.channel.sendMessage('Erreur de syntaxe');
+				message.channel.send('Erreur de syntaxe');
 		} else
-			message.channel.sendMessage(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
+			message.channel.send(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
 	}
 }
 
@@ -224,17 +236,17 @@ function handleMsginterval(message) {
 	if (!message.guild) return ;
 	var tab = message.content.split(" ");
 	if (!isAdmin(message)) {
-		message.channel.sendMessage('T\'as pas le droit.');
+		message.channel.send('T\'as pas le droit.');
 		return ;
 	} else {
 		if (!tab[1]) {
-			message.channel.sendMessage(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
+			message.channel.send(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
 		} else {
 			if (!isNaN(tab[1])) {
 				msgInterval = tab[1];
-				message.channel.sendMessage(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
+				message.channel.send(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
 			} else
-				message.channel.sendMessage('Erreur de syntaxe');
+				message.channel.send('Erreur de syntaxe');
 		}
 	}
 }
@@ -276,7 +288,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
+					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			case 2:
@@ -284,7 +296,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
+					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			case 3:
@@ -292,7 +304,7 @@ function handleSpam(message) {
 					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
-					message.author.sendMessage(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
+					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
 				}
 				break ;
 			default:
@@ -312,7 +324,7 @@ var botConnection = null;
 function handleJoin(message) {
 	if (!message.guild) return ;
 	if (!message.member.voiceChannel)
-		message.channel.sendMessage('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
+		message.channel.send('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
 	else {
 		botVoiceChannel = message.member.voiceChannel;
 		message.member.voiceChannel.join()
@@ -330,11 +342,11 @@ function handleJoin(message) {
 function handlePlay(message) {
 	var tab = message.content.split(' ');
 	if (!tab[1]) {
-		message.channel.sendMessage('Il faut me passer un lien youtube !');
+		message.channel.send('Il faut me passer un lien youtube !');
 		return ;
 	}
 	if (!botConnection)
-		message.channel.sendMessage('Il faut que je soit dans un channel vocal pour utilier cette commande');
+		message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
 	else {
 		const stream = ytdl(tab[1], {filter : 'audioonly'});
 		botConnection.playStream(stream, streamOptions);
@@ -347,7 +359,7 @@ function handlePlay(message) {
 */
 function handleLeave(message) {
 	if (!botVoiceChannel)
-		message.channel.sendMessage('Il faut que je soit dans un channel vocal pour utilier cette commande');
+		message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
 	else {
 		botVoiceChannel.leave();
 		botVoiceChannel = null;
@@ -440,11 +452,11 @@ bot.on("disconnected", function () {
 });
 
 bot.on('guildMemberAdd', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
+	guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
 });
 
 bot.on('guildMemberRemove', ({user, guild}) => {
-	guild.defaultChannel.sendMessage(`<@${user.id}> viens de quitter.`);
+	guild.defaultChannel.send(`<@${user.id}> viens de quitter.`);
 });
 
 setInterval(checkSpam, 60000);
