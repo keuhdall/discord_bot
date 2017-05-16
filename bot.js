@@ -43,7 +43,17 @@ function handleHelp(message) {
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
-- !nogord : met kraive en PLS\`\`\``);
+- !nogord : met kraive en PLS
+- !join : invite le bot dans votre channel vocal
+- !leave : fait quitter le channel au bot
+- !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal \`\`\``);
+	if (isAdmin(message)) {
+		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !\`\`\`
+- !spamlevel : permet de fixer le niveau de spam du serveur [0-3]
+- !spamtime : permet de fixer le temps dans le groupe spammeur
+- !msginterval : permet de fixer le temps minimum entre 2 messages (en ms ; uniquement actif pour un spamlevel >= 2)
+- !kill : kill le bot\`\`\``);
+	}
 }
 
 function handleAbout(message) {
@@ -86,20 +96,31 @@ function handleClean(message) {
 		}
 		if (tab[2] > 30) tab[2] = 30;
 		tab[2] *= 60000;
-		var tmpFetchMsg = message.createdTimestamp;
-		while (tmpFetchMsg > message.createdTimestamp - tab[2])
+		var countMsg = 2;
+		var tmpFetchMsg = message;
+		while (tmpFetchMsg.createdTimestamp > message.createdTimestamp - tab[2])
 		{
-			console.log(tmpFetchMsg);
-			message.channel.fetchMessages({limit : 2})
+			console.log(tmpFetchMsg.content);
+			message.channel.fetchMessages({limit : countMsg})
 			.then(messages => {
+				console.log('passe');
+				process.exit(1);
 				let tmpArray = new Array();
 				tmpArray = messages.array();
-				tmpFetchMsg = tmpArray[1].createdTimestamp
-				tmpArray[1].delete();
+				console.log('length : ' + tmpArray.length);
+				tmpFetchMsg = tmpArray[tmpArray.length - 1];
 			})
 			.catch(console.error());
+			++countMsg;
+			console.log(countMsg);
 		}
-		message.delete();
+		message.channel.fetchMessages({limit : countMsg})
+		.then(messages => {
+			message.channel.bulkDelete(messages);
+			message.channel.send(`${tab[2] - 1} Messages effacés avec succès par ${message.author.username}.`);
+		})
+		.catch(console.error());
+		//message.delete();
 	}
 	else
 		message.channel.send('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
