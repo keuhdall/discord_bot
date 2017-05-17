@@ -16,6 +16,8 @@ var msgInterval = 1000;
 var killConfirm = false;
 var tmpMsg;
 var isSpam;
+var dispatcher;
+var queue = [];
 
 commands['!help']			= handleHelp;
 commands['!about']			= handleAbout;
@@ -31,6 +33,8 @@ commands['!msginterval']	= handleMsginterval;
 commands['!join']			= handleJoin;
 commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
+commands['!list']			= handleList;
+commands['!skip']			= handleSkip;
 
 /*
 Function that print a help message with the description of the commands
@@ -230,6 +234,7 @@ function checkConfirm(message)
 /*
  Function that allows an admin to edit the time in the spamRole
  Command : !spamtime [time] (optionnal)
+* t
 */
 function handleSpamtime(message) {
 	if (!message.guild) return ;
@@ -356,22 +361,74 @@ function handleJoin(message) {
 	}
 }
 
+function sendMusicEmbed(message, music) {
+	var time = new Object();
+	time = getTimeFormat(music.duration);
+	console.log(music.duration);
+	console.log(time);
+	message.channel.send('', {embed : {
+		color: 65399,
+		author: {
+			name: 'BOT POTAGER EN MODE DJ MAGGLE',
+			icon_url: bot.user.avatarURL
+		},
+		title: 'Now playing :',
+		fields: [{
+			name: 'Titre : ',
+			value: `${music.title}`
+		}, {
+			name: 'Durée :',
+			//value: `${music.duration}`
+			value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
+		}, {
+			name: 'Proposée par :',
+			value: `${music.author}`
+		}]
+	}});
+}
+
 /*
  Function that makes the bor play a song provided through a youtube link
  Command : !play [link]
  */
 function handlePlay(message) {
+	var tmp = queue[0] ? true : false;
 	var tab = message.content.split(' ');
+	var music = new Object();
 	if (!tab[1]) {
 		message.channel.send('Il faut me passer un lien youtube !');
 		return ;
-	}
-	if (!botConnection)
+	} else if (!botConnection) {
 		message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
-	else {
-		const stream = ytdl(tab[1], {filter : 'audioonly'});
-		botConnection.playStream(stream, streamOptions);
+		return ;
+	} else {
+		music.url = tab[1];
+		music.author = message.author.username;
+		ytdl.getInfo(tab[1])
+		.then(info => {
+			music.title = info.title;
+			music.duration = info.length_seconds;
+			if (!tmp)
+				sendMusicEmbed(message, music);
+			else
+				message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
+		}).catch(console.error());
+		if (!queue[0])
+		{
+			const stream = ytdl(music.url, {filter : 'audioonly'});
+			dispatcher = botConnection.playStream(stream, streamOptions);
+		}
+		queue.push(music);
+		dispatcher.on('end', function() {
+			queue.shift();
+			if (queue[0]) {
+				sendMusicEmbed(message, queue[0]);
+				stream = ytdl(queue[0].url, {filter : 'audioonly'});
+				dispatcher = botConnection.playStream(stream, streamOptions);
+			}
+		});
 	}
+	message.delete();
 }
 
 /*
@@ -385,6 +442,22 @@ function handleLeave(message) {
 		botVoiceChannel.leave();
 		botVoiceChannel = null;
 		botConnection = null;
+	}
+}
+
+function handleList(message) {
+	var titles = queue.map(function(a) {return a.title;});
+	message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
+}
+
+function handleSkip(message) {
+	console.log('length : ' + queue.length);
+	//queue.shift();
+	queue.splice(0, 1);
+	if (queue[0]) {
+		sendMusicEmbed(message, queue[0]);
+		stream = ytdl(queue[0].url, {filter : 'audioonly'});
+		dispatcher = botConnection.playStream(stream, streamOptions);
 	}
 }
 
@@ -432,6 +505,18 @@ function getUppercasePercentage (content) {
 	return ((countUppercase / content.length) * 100);
 }
 
+function getTimeFormat(time) {
+	var newTime = new Object;
+	newTime.hours = time / 3600;
+	newTime.hours = Math.trunc(newTime.hours);
+	newTime.minutes = time / 60;
+	newTime.minutes = Math.trunc(newTime.minutes);
+	newTime.minutes %= 60;
+	newTime.seconds = time % 3600;
+	newTime.seconds %= 60;
+	return (newTime);
+}
+
 function checkMessageTime(message)
 {
 	if (!tmpMsg) {
@@ -463,7 +548,7 @@ bot.on("message", message => {
 });
 
 bot.on("ready", function () {
-	bot.user.setGame('Présidentielles 2017');
+	bot.user.setGame('Down Nogord Simulator');
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
 });
 
