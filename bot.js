@@ -364,8 +364,6 @@ function handleJoin(message) {
 function sendMusicEmbed(message, music) {
 	var time = new Object();
 	time = getTimeFormat(music.duration);
-	console.log(music.duration);
-	console.log(time);
 	message.channel.send('', {embed : {
 		color: 65399,
 		author: {
@@ -378,7 +376,6 @@ function sendMusicEmbed(message, music) {
 			value: `${music.title}`
 		}, {
 			name: 'Durée :',
-			//value: `${music.duration}`
 			value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
 		}, {
 			name: 'Proposée par :',
@@ -451,13 +448,8 @@ function handleList(message) {
 }
 
 function handleSkip(message) {
-	console.log('length : ' + queue.length);
-	//queue.shift();
-	queue.splice(0, 1);
-	if (queue[0]) {
-		sendMusicEmbed(message, queue[0]);
-		stream = ytdl(queue[0].url, {filter : 'audioonly'});
-		dispatcher = botConnection.playStream(stream, streamOptions);
+	if (queue[0] && dispatcher) {
+		dispatcher.end();
 	}
 }
 
