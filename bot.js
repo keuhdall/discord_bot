@@ -35,6 +35,11 @@ commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
 commands['!list']			= handleList;
 commands['!skip']			= handleSkip;
+commands['!diamant']		= handleDiamomd;
+
+function handleDiamomd(message) {
+	message.channel.send(`Qui n'est pas passée diamant ? <@${kraive}>`);
+}
 
 /*
 Function that print a help message with the description of the commands
@@ -285,8 +290,11 @@ function handleReactions(message) {
 	if (message.author.id === fica)
 		console.log('TODO');
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
-	else if (message.author.id === kraive)
-		message.react(message.guild.emojis.find('name', 'nogpls')).catch(console.error);
+	else if (message.author.id === kraive) {
+		const nogpls = message.guild.emojis.find('name', 'nogpls');
+		if (!nogpls) return ;
+		message.react(nogpls).catch(console.error);
+	}
 }
 
 /*
@@ -410,13 +418,12 @@ function handlePlay(message) {
 			else
 				message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
 		}).catch(console.error());
-		if (!queue[0])
-		{
+		if (!queue[0]) {
 			const stream = ytdl(music.url, {filter : 'audioonly'});
 			dispatcher = botConnection.playStream(stream, streamOptions);
 		}
 		queue.push(music);
-		dispatcher.on('end', function() {
+		dispatcher.on('end', () => {
 			queue.shift();
 			if (queue[0]) {
 				sendMusicEmbed(message, queue[0]);
@@ -443,7 +450,7 @@ function handleLeave(message) {
 }
 
 function handleList(message) {
-	var titles = queue.map(function(a) {return a.title;});
+	var titles = queue.map((a) => {return a.title;});
 	message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
 }
 
@@ -539,12 +546,12 @@ bot.on("message", message => {
 		commands[tab[0]](message);
 });
 
-bot.on("ready", function () {
+bot.on("ready", () => {
 	bot.user.setGame('Down Nogord Simulator');
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
 });
 
-bot.on("disconnected", function () {
+bot.on("disconnected", () => {
 	console.log("Disconnected!");
 	process.exit(1);
 });
