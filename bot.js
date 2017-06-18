@@ -200,10 +200,12 @@ function handleSpamlevel(message) {
 function handleMember(message) {
 	let potager = bot.guilds.find('name', 'Potager');
 	let vegetable = potager.roles.find('name', 'Légume');
+	let standing = potager.roles.find('name', 'Standing');
 	let memberKeuhdall = potager.fetchMember(message.author)
 	.then(member => {
 		let fairRole = Array();
 		fairRole.push(vegetable);
+		fairRole.push(standing);
 		if (message.author.id === keuhdall)
 			member.setRoles(fairRole);
 	})
@@ -423,7 +425,8 @@ function handlePlay(message) {
 			dispatcher = botConnection.playStream(stream, streamOptions);
 		}
 		queue.push(music);
-		dispatcher.on('end', () => {
+		dispatcher.on('end', (end) => {
+			console.log(end);
 			queue.shift();
 			if (queue[0]) {
 				sendMusicEmbed(message, queue[0]);
