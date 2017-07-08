@@ -35,27 +35,25 @@ commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
 commands['!list']			= handleList;
 commands['!skip']			= handleSkip;
-commands['!diamant']		= handleDiamomd;
-
-function handleDiamomd(message) {
-	message.channel.send(`Qui n'est pas passée diamant ? <@${kraive}>`);
-}
 
 /*
 Function that print a help message with the description of the commands
 Command : !help
 */
 function handleHelp(message) {
-	message.channel.send(`Voici la liste des commandes :\`\`\`
+	var cmdHelp = `Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
-- !nogord : met kraive en PLS
 - !join : invite le bot dans votre channel vocal
 - !leave : fait quitter le channel au bot
-- !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal \`\`\``);
+- !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
+	if (message.guild.name === 'Potager')
+		cmdHelp += `\n- !nogord : met kraive en PLS`;
+	cmdHelp += `\`\`\``;
+	message.channel.send(cmdHelp);
 	if (isAdmin(message)) {
 		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !\`\`\`
 - !spamlevel : permet de fixer le niveau de spam du serveur [0-3]
@@ -79,7 +77,7 @@ Command : !clean [option] [number]
 Options : -c -t (-t not implented yet)
 */
 function handleClean(message) {
-	if (!message.guild) return ;
+	if (!message.guild || message.guild.name !== 'Potager') return ;
 	let authorizedRole = message.guild.roles.find('name', 'Légume');
 	var tab = message.content.split(" ");
 	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
@@ -303,7 +301,7 @@ function handleReactions(message) {
  Function that prevent spam. Will chenge user's role and deprive him from his permissions.
 */
 function handleSpam(message) {
-	if (!message.guild) return ;
+	if (!message.guild || message.guild.name !== 'Potager') return ;
 	if (message.author.id === bot.user.id || isAdmin(message)) return ;
 	message.channel.fetchMessages({limit : 4})
 	.then(messages => {
@@ -469,6 +467,7 @@ function handleSkip(message) {
 function checkSpam() {
 	let potager = bot.guilds.find('name', 'Potager');
 	let spamRole = [];
+	if (!potager) return ;
 	spamRole.push(potager.roles.find('name', 'Spammeur'));
 	for (var i = 0; i < spamMembers.length; i++) {
 			spamMembers[i].time++;
@@ -483,6 +482,7 @@ function checkSpam() {
  Function that check if the user that issued a message is admin or not.
 */
 function isAdmin(message) {
+	if (message.guild.name !== 'Potager') return true;
 	let Moi = message.guild.roles.find('name', 'Moi');
 	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
 	if (message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id))
@@ -559,12 +559,18 @@ bot.on("disconnected", () => {
 	process.exit(1);
 });
 
-bot.on('guildMemberAdd', ({user, guild}) => {
-	guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
+bot.on('guildMemberAdd', message => {
+	if (message.guild.name === 'Potager')
+		message.guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
+	else if (message.guild.name === 'Le serveur des gens spéciaux')
+		message.guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur des petit special snowflake !.`);
 });
 
-bot.on('guildMemberRemove', ({user, guild}) => {
-	guild.defaultChannel.send(`<@${user.id}> viens de quitter.`);
+bot.on('guildMemberRemove', message => {
+	if (message.guild.name === 'Potager')
+		message.guild.defaultChannel.send(`<@${user.id}> viens de quitter.`);
+	else if (message.guild.name === 'Le serveur des gens spéciaux')
+		message.guild.defaultChannel.send(`<@${user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
 setInterval(checkSpam, 60000);
