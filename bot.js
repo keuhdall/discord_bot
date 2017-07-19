@@ -41,6 +41,7 @@ Function that print a help message with the description of the commands
 Command : !help
 */
 function handleHelp(message) {
+	if (!message.guild) return;
 	var cmdHelp = `Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
@@ -482,7 +483,7 @@ function checkSpam() {
  Function that check if the user that issued a message is admin or not.
 */
 function isAdmin(message) {
-	if (message.guild.name !== 'Potager') return true;
+	if (!message.guild || message.guild.name !== 'Potager') return true;
 	let Moi = message.guild.roles.find('name', 'Moi');
 	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
 	if (message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id))
@@ -559,18 +560,18 @@ bot.on("disconnected", () => {
 	process.exit(1);
 });
 
-bot.on('guildMemberAdd', message => {
+bot.on('guildMemberAdd', ({message, member}) => {
 	if (message.guild.name === 'Potager')
-		message.guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur Discord du Potager !.`);
+		message.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur Discord du Potager !.`);
 	else if (message.guild.name === 'Le serveur des gens spéciaux')
-		message.guild.defaultChannel.send(`Hello <@${user.id}>, bienvenue sur le serveur des petit special snowflake !.`);
+		message.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur des petit special snowflake !.`);
 });
 
-bot.on('guildMemberRemove', message => {
+bot.on('guildMemberRemove', ({message, member}) => {
 	if (message.guild.name === 'Potager')
-		message.guild.defaultChannel.send(`<@${user.id}> viens de quitter.`);
+		message.guild.defaultChannel.send(`<@${member.user.id}> viens de quitter.`);
 	else if (message.guild.name === 'Le serveur des gens spéciaux')
-		message.guild.defaultChannel.send(`<@${user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
+		message.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
 setInterval(checkSpam, 60000);
