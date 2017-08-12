@@ -560,18 +560,18 @@ bot.on("disconnected", () => {
 	process.exit(1);
 });
 
-bot.on('guildMemberAdd', ({message, member}) => {
-	if (message.guild.name === 'Potager')
-		message.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur Discord du Potager !.`);
-	else if (message.guild.name === 'Le serveur des gens spéciaux')
-		message.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur des petit special snowflake !.`);
+bot.on('guildMemberAdd', member => {
+	if (member.guild.name === 'Potager')
+		member.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur Discord du Potager !.`);
+	else if (member.guild.name === 'Le serveur des gens spéciaux')
+		member.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur des gens spéciaux, petit special snowflake !.`);
 });
 
-bot.on('guildMemberRemove', ({message, member}) => {
-	if (message.guild.name === 'Potager')
-		message.guild.defaultChannel.send(`<@${member.user.id}> viens de quitter.`);
-	else if (message.guild.name === 'Le serveur des gens spéciaux')
-		message.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
+bot.on('guildMemberRemove', member => {
+	if (member.guild.name === 'Potager')
+		member.guild.defaultChannel.send(`<@${member.user.id}> viens de quitter.`);
+	else if (member.guild.name === 'Le serveur des gens spéciaux')
+		member.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
 setInterval(checkSpam, 60000);
