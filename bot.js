@@ -21,7 +21,6 @@ var queue = [];
 
 commands['!help']			= handleHelp;
 commands['!about']			= handleAbout;
-commands['!nogord']			= handleNogord;
 commands['!clean']			= handleClean;
 commands['!msg']			= handleMsg;
 commands['!roll']			= handleRoll;
@@ -51,8 +50,6 @@ function handleHelp(message) {
 - !join : invite le bot dans votre channel vocal
 - !leave : fait quitter le channel au bot
 - !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
-	if (message.guild.name === 'Potager')
-		cmdHelp += `\n- !nogord : met kraive en PLS`;
 	cmdHelp += `\`\`\``;
 	message.channel.send(cmdHelp);
 	if (isAdmin(message)) {
@@ -66,10 +63,6 @@ function handleHelp(message) {
 
 function handleAbout(message) {
 	message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
-}
-
-function handleNogord(message) {
-	message.channel.send(`Qui n'a pas down Nogord ? <@${kraive}>`);
 }
 
 /*
@@ -291,11 +284,6 @@ function handleReactions(message) {
 	if (message.author.id === fica)
 		console.log('TODO');
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
-	else if (message.author.id === kraive) {
-		const nogpls = message.guild.emojis.find('name', 'nogpls');
-		if (!nogpls) return ;
-		message.react(nogpls).catch(console.error);
-	}
 }
 
 /*
