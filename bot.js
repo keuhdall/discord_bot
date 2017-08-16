@@ -41,7 +41,7 @@ Command : !help
 */
 function handleHelp(message) {
 	if (!message.guild) return;
-	var cmdHelp = `Voici la liste des commandes :\`\`\`
+	let cmdHelp = `Voici la liste des commandes :\`\`\`
 - !help : affiche ce message
 - !about : donne des informations sur le bot
 - !msg : affiche le n-ieme message du channel
@@ -73,7 +73,7 @@ Options : -c -t (-t not implented yet)
 function handleClean(message) {
 	if (!message.guild || message.guild.name !== 'Potager') return ;
 	let authorizedRole = message.guild.roles.find('name', 'Légume');
-	var tab = message.content.split(" ");
+	let tab = message.content.split(" ");
 	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
 		if (!message.member.roles.has(authorizedRole.id)) {
 			message.channel.send('Hep hep hep, t\'as pas le droit.');
@@ -97,8 +97,8 @@ function handleClean(message) {
 		}
 		if (tab[2] > 30) tab[2] = 30;
 		tab[2] *= 60000;
-		var countMsg = 2;
-		var tmpFetchMsg = message;
+		let countMsg = 2;
+		let tmpFetchMsg = message;
 		while (tmpFetchMsg.createdTimestamp > message.createdTimestamp - tab[2])
 		{
 			console.log(tmpFetchMsg.content);
@@ -132,12 +132,12 @@ Function that will display the n-th message
 Command : !msg [index of the message you zqnt to display]
 */
 function handleMsg(message) {
-	var tab = message.content.split(" ");
+	let tab = message.content.split(" ");
 	if (!tab[1] || !message.guild) return ;
 	tab[1]++;
 	message.channel.fetchMessages({limit : tab[1]})
 	.then(messages => {
-		var msg = messages.array();
+		let msg = messages.array();
 		message.channel.send(`${msg[tab[1] - 1].content}`);
 	})
 	.catch(console.error());
@@ -148,14 +148,14 @@ Function that will print random numbers
 Command : !roll [numbers of rolls]d[size of the dice]
 */
 function handleRoll(message) {
-	var tmp_cmd = message.content.split(' ');
+	let tmp_cmd = message.content.split(' ');
 	if (!tmp_cmd[1] || !message.guild) return ;
-	var tmp_dice = tmp_cmd[1].split('d');
-	var values = new Array();
-	for (var i = 0; i < tmp_dice[0]; i ++)
+	let tmp_dice = tmp_cmd[1].split('d');
+	let values = new Array();
+	for (let i = 0; i < tmp_dice[0]; i ++)
 		values.push(Math.floor(Math.random() * tmp_dice[1]) + 1);
-	var str = 'Resultats : ';
-	for (var j = 0; j < values.length; j++)
+	let str = 'Resultats : ';
+	for (let j = 0; j < values.length; j++)
 	{
 		str += values[j];
 		if (j != values.length - 1)
@@ -170,7 +170,7 @@ function handleRoll(message) {
 */
 function handleSpamlevel(message) {
 	if (!message.guild) return ;
-	var tab = message.content.split(" ");
+	let tab = message.content.split(" ");
 	if (isAdmin(message))
 	{
 		if (!tab[1])
@@ -237,7 +237,7 @@ function checkConfirm(message)
 */
 function handleSpamtime(message) {
 	if (!message.guild) return ;
-	var tab = message.content.split(" ");
+	let tab = message.content.split(" ");
 	if (!isAdmin(message)) {
 		message.channel.send('T\'as pas le droit.');
 		return ;
@@ -259,7 +259,7 @@ function handleSpamtime(message) {
 */
 function handleMsginterval(message) {
 	if (!message.guild) return ;
-	var tab = message.content.split(" ");
+	let tab = message.content.split(" ");
 	if (!isAdmin(message)) {
 		message.channel.send('T\'as pas le droit.');
 		return ;
@@ -296,9 +296,9 @@ function handleSpam(message) {
 	.then(messages => {
 		let spamRole = Array();
 		spamRole.push(message.guild.roles.find('name', 'Spammeur'));
-		var msg = messages.array();
-		var same = true;
-		for (var i = 1; i < 4; i++) {
+		let msg = messages.array();
+		let same = true;
+		for (let i = 1; i < 4; i++) {
 			if (message.content !== msg[i].content)
 				same = false;
 		}
@@ -308,7 +308,7 @@ function handleSpam(message) {
 				break ;
 			case 1:
 				if (same === true) {
-					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
 					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
@@ -316,7 +316,7 @@ function handleSpam(message) {
 				break ;
 			case 2:
 				if (same === true || isSpam === true) {
-					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
 					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
@@ -324,7 +324,7 @@ function handleSpam(message) {
 				break ;
 			case 3:
 				if (same === true || isSpam === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
-					var spammer = {member:message.member, time:0, oldRoles:message.member.roles};
+					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
 					spamMembers.push(spammer);
 					message.member.setRoles(spamRole);
 					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
@@ -359,7 +359,7 @@ function handleJoin(message) {
 }
 
 function sendMusicEmbed(message, music) {
-	var time = new Object();
+	let time = new Object();
 	time = getTimeFormat(music.duration);
 	message.channel.send('', {embed : {
 		color: 65399,
@@ -386,9 +386,9 @@ function sendMusicEmbed(message, music) {
  Command : !play [link]
  */
 function handlePlay(message) {
-	var tmp = queue[0] ? true : false;
-	var tab = message.content.split(' ');
-	var music = new Object();
+	let tmp = queue[0] ? true : false;
+	let tab = message.content.split(' ');
+	let music = new Object();
 	if (!tab[1]) {
 		message.channel.send('Il faut me passer un lien youtube !');
 		return ;
@@ -440,7 +440,7 @@ function handleLeave(message) {
 }
 
 function handleList(message) {
-	var titles = queue.map((a) => {return a.title;});
+	let titles = queue.map((a) => {return a.title;});
 	message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
 }
 
@@ -458,7 +458,7 @@ function checkSpam() {
 	let spamRole = [];
 	if (!potager) return ;
 	spamRole.push(potager.roles.find('name', 'Spammeur'));
-	for (var i = 0; i < spamMembers.length; i++) {
+	for (let i = 0; i < spamMembers.length; i++) {
 			spamMembers[i].time++;
 		if (spamMembers[i].time > spamRoleTime) {
 			spamMembers[i].member.setRoles(spamMembers[i].oldRoles);
@@ -489,7 +489,7 @@ function isAlpha(c) {
 */
 function getUppercasePercentage (content) {
 	let countUppercase = 0;
-	for (var i = 0; i < content.length; i++) {
+	for (let i = 0; i < content.length; i++) {
 		if (content[i] === content[i].toUpperCase() && isAlpha(content[i]))
 			countUppercase++;
 	}
@@ -497,7 +497,7 @@ function getUppercasePercentage (content) {
 }
 
 function getTimeFormat(time) {
-	var newTime = new Object;
+	let newTime = new Object;
 	newTime.hours = time / 3600;
 	newTime.hours = Math.trunc(newTime.hours);
 	newTime.minutes = time / 60;
@@ -533,7 +533,7 @@ bot.on("message", message => {
 		checkConfirm(message);
 	else if (message.author.id !== bot.user.id)
 		killConfirm = false;
-	var tab = message.content.split(' ');
+	let tab = message.content.split(' ');
 	if (commands[tab[0]])
 		commands[tab[0]](message);
 });
