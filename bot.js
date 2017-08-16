@@ -71,11 +71,13 @@ Command : !clean [option] [number]
 Options : -c -t (-t not implented yet)
 */
 function handleClean(message) {
-	if (!message.guild || message.guild.name !== 'Potager') return ;
-	let authorizedRole = message.guild.roles.find('name', 'Légume');
+	if (!message.guild) return ;
+	let authorizedRole;
+	if (message.guild.name === "Potager")
+		authorizedRole = message.guild.roles.find('name', 'Légume');
 	let tab = message.content.split(" ");
 	if (tab[1] === "-c" && tab[2] && !isNaN(tab[2])) {
-		if (!message.member.roles.has(authorizedRole.id)) {
+		if (message.guild.name === "Potager" && !message.member.roles.has(authorizedRole.id)) {
 			message.channel.send('Hep hep hep, t\'as pas le droit.');
 			return ;
 		}
