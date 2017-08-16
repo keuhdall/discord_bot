@@ -366,7 +366,7 @@ function sendMusicEmbed(message, music) {
 	message.channel.send('', {embed : {
 		color: 65399,
 		author: {
-			name: 'BOT POTAGER EN MODE DJ MAGGLE',
+			name: `BOT ${message.guild.name} : MODE DJ`,
 			icon_url: bot.user.avatarURL
 		},
 		title: 'Now playing :',
