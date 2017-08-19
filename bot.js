@@ -29,6 +29,7 @@ commands['!member']			= handleMember;
 commands['!kill']			= handleKill;
 commands['!spamtime']		= handleSpamtime;
 commands['!msginterval']	= handleMsginterval;
+commands['!reminder']		= handleReminder;
 commands['!join']			= handleJoin;
 commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
@@ -62,7 +63,7 @@ function handleHelp(message) {
 }
 
 function handleAbout(message) {
-	message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas a me contacter pour plus de renseignements`);
+	message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas à me contacter pour plus de renseignements`);
 }
 
 /*
@@ -277,6 +278,53 @@ function handleMsginterval(message) {
 		}
 	}
 }
+
+function checkReminder() {
+	let currentTime =  new Date();
+	for (let i = 0; i < reminder_tab.length; ++i) {
+		if (reminder_tab[i].hours == currentTime.getHours() + 2 && reminder_tab[i].minutes == currentTime.getMinutes()) {
+			reminder_tab[i].message.reply(`Hey, voici ton reminder : ${reminder_tab[i].content}`);
+			reminder_tab.splice(i, 1);
+		}
+	}
+}
+
+var reminder_tab = new Array();
+function handleReminder(message) {
+	let tab = message.content.split(" ");
+	let reminder_obj = new Object();
+	if (message.guild) {
+		if (tab[1]) {
+			if (tab[2]) {
+				let tab_time = tab[1].split(":");
+				if (!tab_time[0] || !tab_time[1] || isNaN(tab_time[0]) || isNaN(tab_time[1]) || tab_time[0] < 0 || tab_time[0] > 23 || tab_time[1] < 0 || tab_time[1] > 59) {
+					message.channel.send("Erreur : la date est mal formaté !");
+					return;
+				} else {
+					let tab_content = message.content.split("\"");
+					if (tab_content[1]) {
+						reminder_obj.message = message;
+						reminder_obj.hours = tab_time[0];
+						reminder_obj.minutes = tab_time[1];
+						reminder_obj.content = tab_content[1];
+						reminder_tab.push(reminder_obj);
+						message.channel.send(`Ok ! je t'enverrai une notification à ${reminder_obj.hours}:${reminder_obj.minutes} avec le contenu suivant : ${reminder_obj.content}`);
+					} else {
+						message.channel.send("Erreur : le contenu du reminder doit être mis entre double quotes !");
+						return;
+					}
+				}
+			} else {
+				message.channel.send("Erreur : pas de message précisé");
+				return;
+			}
+		} else {
+			message.channel.send("Erreur : il n'y a pas de d'heure de précisé !");
+			return;
+		}
+	}
+}
+
 
 /*
 Function that will automatically add a reaction to the messages of certain members to troll them
@@ -565,4 +613,5 @@ bot.on('guildMemberRemove', member => {
 });
 
 setInterval(checkSpam, 60000);
+setInterval(checkReminder, 60000);
 bot.login(config.token);
