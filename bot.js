@@ -36,6 +36,7 @@ commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
 commands['!list']			= handleList;
 commands['!skip']			= handleSkip;
+commands['!ub']				= handleUb;
 
 /*
 Function that print a help message with the description of the commands
@@ -503,6 +504,33 @@ function handleSkip(message) {
 	if (queue[0] && dispatcher) {
 		dispatcher.end();
 	}
+}
+
+/*
+ Function that will search the given keywords on urbandictionary
+ Command : !ub ["your keywords here"]
+*/
+function handleUb(message) {
+	if (!message.guild) return;
+	let tab = message.content.split("\"");
+	if (!tab[1]) {
+		message.guild.send("Erreur de syntaxe");
+		return;
+	}
+	let ub_url = "http://api.urbandictionary.com/v0/define?term=" + tab[1];
+	let json_get;
+	request.get(ub_url).on('data', data_get => {
+		try {
+			json_get = JSON.parse(data_get.toString());
+		} catch (e) {
+			console.error(e);
+			return;
+		}
+		if (json_get.list[0])
+			message.channel.send(`pemalink : ${json_get.list[0].permalink}`);
+		else
+			message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${tab[1]}"`);
+	});
 }
 
 /*
