@@ -37,6 +37,7 @@ commands['!play']			= handlePlay;
 commands['!list']			= handleList;
 commands['!skip']			= handleSkip;
 commands['!ub']				= handleUb;
+commands['!git']			= handleGit;
 
 /*
 Function that print a help message with the description of the commands
@@ -51,6 +52,7 @@ function handleHelp(message) {
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
 - !reminder [heure] ["message"]: envoie un rappel contenant le message donné à l'heure donnée
+- !git [username]: affiche le profil github d'un utilisateur donné
 - !join : invite le bot dans votre channel vocal
 - !leave : fait quitter le channel au bot
 - !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
@@ -530,6 +532,61 @@ function handleUb(message) {
 			message.channel.send(`pemalink : ${json_get.list[0].permalink}`);
 		else
 			message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${tab[1]}"`);
+	});
+}
+
+/*
+ Function that will display  the github profile of a given username
+ Command : !git [uername]
+*/
+var tmp_json = "";
+function handleGit(message) {
+	if (!message.guild) return;
+	let tab = message.content.split(" ");
+	if (!tab[1]) {
+		message.channel.send("Erreur de syntaxe, usage : !git [username]");
+		return;
+	}
+	let git_url = "https://api.github.com/users/" + tab[1];
+	let json_get;
+	request.get({url: git_url, headers: {
+		'User-Agent': 'keuhdall'}
+	}).on('data', data_get => {
+		try {
+			if (!tmp_json)
+				json_get = JSON.parse(data_get.toString());
+			else {
+				tmp_json += data_get.toString();
+				json_get = JSON.parse(tmp_json);
+			}
+		} catch (e) {
+			tmp_json += data_get.toString();
+			return;
+		}
+		tmp_json = "";
+		if (!json_get.login) {
+			message.channel.send(`Erreur : il semble que l'utilisateur ${tab[1]} n'existe pas`);
+			return;
+		}
+		message.channel.send('', {embed : {
+			color: 65399,
+			author: {
+				name: `BOT ${message.guild.name} : GitHub assistant`,
+				icon_url: json_get.avatar_url
+			},
+			title: `Profil de : ${json_get.name}`,
+			url: json_get.html_url,
+			fields: [{
+				name: 'Description :',
+				value: (json_get.bio ? json_get.bio : "Non précisé")
+			},{
+				name: 'Localisation :',
+				value: (json_get.location ? json_get.location : "Non précisé")
+			},{
+				name: 'Company :',
+				value: (json_get.company ? json_get.company : "Non précisé")
+			}]
+		}});
 	});
 }
 
