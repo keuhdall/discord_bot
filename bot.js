@@ -1,6 +1,7 @@
 const config = require('./config.js');
 const Discord = require('discord.js');
 const ytdl = require('ytdl-core');
+const request = require('request');
 const streamOptions = { seek: 0, volume: 1 };
 const bot = new Discord.Client();
 const kraive = '94011401940504576';
@@ -237,7 +238,6 @@ function checkConfirm(message)
 /*
  Function that allows an admin to edit the time in the spamRole
  Command : !spamtime [time] (optionnal)
-* t
 */
 function handleSpamtime(message) {
 	if (!message.guild) return ;
@@ -291,6 +291,10 @@ function checkReminder() {
 }
 
 var reminder_tab = new Array();
+/*
+ Function that will send a reminder to the author at the given time
+ Command : !reminder [hours:minutes] ["message"]
+*/
 function handleReminder(message) {
 	let tab = message.content.split(" ");
 	let reminder_obj = new Object();
@@ -393,7 +397,7 @@ var botVoiceChannel = null;
 var botConnection = null;
 /*
  Function that makes the bot join your voice channel
- Commamd : !join
+ Command : !join
 */
 function handleJoin(message) {
 	if (!message.guild) return ;
