@@ -48,6 +48,7 @@ function handleHelp(message) {
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
+- !reminder [heure] ["message"]: envoie un rappel contenant le message donné à l'heure donnée
 - !join : invite le bot dans votre channel vocal
 - !leave : fait quitter le channel au bot
 - !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
