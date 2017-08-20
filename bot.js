@@ -299,7 +299,7 @@ function handleReminder(message) {
 			if (tab[2]) {
 				let tab_time = tab[1].split(":");
 				if (!tab_time[0] || !tab_time[1] || isNaN(tab_time[0]) || isNaN(tab_time[1]) || tab_time[0] < 0 || tab_time[0] > 23 || tab_time[1] < 0 || tab_time[1] > 59) {
-					message.channel.send("Erreur : la date est mal formaté !");
+					message.channel.send("Erreur : la date est mal formatée !");
 					return;
 				} else {
 					let tab_content = message.content.split("\"");
