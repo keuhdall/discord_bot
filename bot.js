@@ -684,6 +684,18 @@ function checkMessageTime(message)
 	tmpMsg = message;
 }
 
+var status_old = "";
+function checkYouKnowWho() {
+	let server = bot.guilds.find('name', 'Le serveur des gens spéciaux');
+	let me = server.members.find('id', keuhdall)
+	if (!server) return;
+	let youKnowWho = server.members.find('id', '332296552364376064');
+	if (youKnowWho.presence.status !== status_old) {
+		me.send(`Current status : ${youKnowWho.presence.status}`);
+		status_old = youKnowWho.presence.status;
+	}
+}
+
 bot.on("message", message => {
 	handleReactions(message);
 	checkMessageTime(message);
@@ -723,4 +735,5 @@ bot.on('guildMemberRemove', member => {
 
 setInterval(checkSpam, 60000);
 setInterval(checkReminder, 60000);
+setInterval(checkYouKnowWho, 30000);
 bot.login(config.token);
