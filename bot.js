@@ -1,7 +1,9 @@
 const config = require('./config.js');
 const Discord = require('discord.js');
+const util = require('util');
 const ytdl = require('ytdl-core');
 const request = require('request');
+const xml2js = require('xml2js');
 const streamOptions = { seek: 0, volume: 1 };
 const bot = new Discord.Client();
 const kraive = '94011401940504576';
@@ -38,6 +40,7 @@ commands['!list']			= handleList;
 commands['!skip']			= handleSkip;
 commands['!ub']				= handleUb;
 commands['!git']			= handleGit;
+commands['!cat']			= handleCat;
 
 /*
 Function that print a help message with the description of the commands
@@ -53,6 +56,7 @@ function handleHelp(message) {
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
 - !reminder [heure] ["message"]: envoie un rappel contenant le message donné à l'heure donnée
 - !git [username]: affiche le profil github d'un utilisateur donné
+- !cat : affiche une image de chat trop mignon choisi au hasard
 - !join : invite le bot dans votre channel vocal
 - !leave : fait quitter le channel au bot
 - !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
@@ -587,6 +591,21 @@ function handleGit(message) {
 				value: (json_get.company ? json_get.company : "Non précisé")
 			}]
 		}});
+	});
+}
+
+/*
+ Function that will send a random picture of a cute cat_url
+ Command : !cat
+*/
+function handleCat(message) {
+	if (!message.guild) return;
+	let cat_url = "https://thecatapi.com/api/images/get?format=xml";
+	request.get(cat_url).on('data', data_get => {
+		let parse = xml2js.parseString;
+		parse(data_get.toString(), (err, result) => {
+			message.channel.send("Voici une une super image de chat trop mignon : " + result.response.data[0].images[0].image[0].url[0]);
+		});
 	});
 }
 
