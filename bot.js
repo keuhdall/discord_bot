@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 const util = require('util');
 const ytdl = require('ytdl-core');
 const request = require('request');
+const striptags = require('striptags');
+const S = require('string');
 const xml2js = require('xml2js');
 const streamOptions = { seek: 0, volume: 1 };
 const bot = new Discord.Client();
@@ -41,6 +43,7 @@ commands['!skip']			= handleSkip;
 commands['!ub']				= handleUb;
 commands['!git']			= handleGit;
 commands['!cat']			= handleCat;
+commands['!quote']			= handleQuote;
 
 /*
 Function that print a help message with the description of the commands
@@ -606,6 +609,22 @@ function handleCat(message) {
 		parse(data_get.toString(), (err, result) => {
 			message.channel.send("Voici une une super image de chat trop mignon : " + result.response.data[0].images[0].image[0].url[0]);
 		});
+	});
+}
+
+function handleQuote(message) {
+	if (!message.guild) return;
+	//let quote_url = "http://quotesondesign.com/api/3.0/api-3.0.json";
+	let quote_url = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1"
+	request.get(quote_url).on('data', data_get => {
+		let json_getm
+		try {
+			json_get = JSON.parse(data_get.toString());
+		} catch (e) {
+			console.error(e);
+			return;
+		}
+		message.channel.send(`${S((striptags(json_get[0].content))).unescapeHTML().s} - ${json_get[0].title}`);
 	});
 }
 
