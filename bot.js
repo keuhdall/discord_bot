@@ -44,6 +44,7 @@ commands['!ub']				= handleUb;
 commands['!git']			= handleGit;
 commands['!cat']			= handleCat;
 commands['!quote']			= handleQuote;
+commands['!mal']			= handleMal;
 
 /*
 Function that print a help message with the description of the commands
@@ -617,7 +618,7 @@ function handleQuote(message) {
 	//let quote_url = "http://quotesondesign.com/api/3.0/api-3.0.json";
 	let quote_url = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1"
 	request.get(quote_url).on('data', data_get => {
-		let json_getm
+		let json_get;
 		try {
 			json_get = JSON.parse(data_get.toString());
 		} catch (e) {
@@ -625,6 +626,60 @@ function handleQuote(message) {
 			return;
 		}
 		message.channel.send(`${S((striptags(json_get[0].content))).unescapeHTML().s} - ${json_get[0].title}`);
+	});
+}
+
+function handleMal(message) {
+	if (!message.guild) return;
+	let mal_url;
+	let tab = message.content.split(' ');
+	let search_type = 'anime';
+	if (!tab[1]) {
+		message.channel.send("Erreur : aucun argument précisé");
+	} else if (tab[1] === "profil") {
+		if (tab[2]) {
+			mal_url = "https://myanimelist.net/malappinfo.php?u=" + tab[2];
+			search_type = 'profile';
+		} else {
+			message.channel.send("Erreur : pas de profil précisé !");
+			return ;
+		}
+	} else {
+		mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tab[1];
+	}
+	request.get(mal_url, {
+		'auth': {
+			'user': config.mal_username,
+			'pass': config.mal_password,
+			'sendImmediately': false
+		}
+	}).on('data', data_get => {
+		let parse = xml2js.parseString;
+		parse(data_get.toString(), (err, result) => {
+			if (search_type === 'anime')
+			{
+				message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
+					color: 65399,
+					author: {
+						name: `BOT ${message.guild.name} :  MyAnimeList assistant`,
+						icon_url: `${result.anime.entry[0].image}`
+					},
+					title: result.anime.entry[0].english ? `${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})` :
+															`${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})`,
+					url: 'https://myanimelist.net/anime/' + result.anime.entry[0].id,
+					fields: [{
+						name: 'Episodes',
+						value: `${result.anime.entry[0].episodes}`
+					},{
+						name: 'Score',
+						value: `${result.anime.entry[0].score}`
+					}]
+				}});
+				console.log(result.anime.entry[0]);
+			} else {
+				console.log(result);
+			}
+		})
 	});
 }
 
@@ -754,5 +809,5 @@ bot.on('guildMemberRemove', member => {
 
 setInterval(checkSpam, 60000);
 setInterval(checkReminder, 60000);
-setInterval(checkYouKnowWho, 30000);
+setInterval(checkYouKnowWho, 10000);
 bot.login(config.token);
