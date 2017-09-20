@@ -58,7 +58,7 @@ function handleHelp(message) {
 - !msg : affiche le n-ieme message du channel
 - !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
 - !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
-- !reminder [heure] ["message"]: envoie un rappel contenant le message donné à l'heure donnée
+- !reminder [heure] [message]: envoie un rappel contenant le message donné à l'heure donnée
 - !git [username]: affiche le profil github d'un utilisateur donné
 - !cat : affiche une image de chat trop mignon choisi au hasard
 - !join : invite le bot dans votre channel vocal
@@ -317,16 +317,16 @@ function handleReminder(message) {
 					message.channel.send("Erreur : la date est mal formatée !");
 					return;
 				} else {
-					let tab_content = message.content.split("\"");
-					if (tab_content[1]) {
+					let content = patchArgs(message.content.split(" "), 2);
+					if (content !== "") {
 						reminder_obj.message = message;
 						reminder_obj.hours = tab_time[0];
 						reminder_obj.minutes = tab_time[1];
-						reminder_obj.content = tab_content[1];
+						reminder_obj.content = content;
 						reminder_tab.push(reminder_obj);
 						message.channel.send(`Ok ! je t'enverrai une notification à ${reminder_obj.hours}:${reminder_obj.minutes} avec le contenu suivant : ${reminder_obj.content}`);
 					} else {
-						message.channel.send("Erreur : le contenu du reminder doit être mis entre double quotes !");
+						message.channel.send("Erreur : pas de contenu, ou alors le contenu est mal formaté (gros boulet)");
 						return;
 					}
 				}
@@ -638,14 +638,14 @@ function handleMal(message) {
 		message.channel.send("Erreur : aucun argument précisé");
 	} else if (tab[1] === "profil") {
 		if (tab[2]) {
-			mal_url = "https://myanimelist.net/malappinfo.php?u=" + tab[2];
+			mal_url = "https://myanimelist.net/malappinfo.php?u=" + patchArgs(tab, 2).replace(" ", "+");
 			search_type = 'profile';
 		} else {
 			message.channel.send("Erreur : pas de profil précisé !");
 			return ;
 		}
 	} else {
-		mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tab[1];
+		mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + patchArgs(tab, 1).replace(" ", "+");
 	}
 	request.get(mal_url, {
 		'auth': {
@@ -715,6 +715,16 @@ function isAdmin(message) {
 
 function isAlpha(c) {
 	return (/^[A-Z]$/i.test(c));
+}
+
+function patchArgs(args, index) {
+	let str = "";
+	for (let i = index; i < args.length; i++) {
+		str += args[i];
+		if (i != args.length - 1)
+			str += " ";
+	}
+	return str;
 }
 
 /*
