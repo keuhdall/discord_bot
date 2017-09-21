@@ -669,10 +669,12 @@ function handleMal(message) {
 					url: 'https://myanimelist.net/anime/' + result.anime.entry[0].id,
 					fields: [{
 						name: 'Episodes',
-						value: `${result.anime.entry[0].episodes}`
+						value: `${result.anime.entry[0].episodes}`,
+						inline: true
 					},{
 						name: 'Score',
-						value: `${result.anime.entry[0].score}`
+						value: `${result.anime.entry[0].score}`,
+						inline: true
 					}]
 				}});
 				console.log(result.anime.entry[0]);
@@ -771,8 +773,8 @@ function checkMessageTime(message)
 var status_old = "";
 function checkYouKnowWho() {
 	let server = bot.guilds.find('name', 'Le serveur des gens spéciaux');
-	let me = server.members.find('id', keuhdall)
 	if (!server) return;
+	let me = server.members.find('id', keuhdall)
 	let youKnowWho = server.members.find('id', '332296552364376064');
 	if (youKnowWho.presence.status !== status_old) {
 		me.send(`Current status : ${youKnowWho.presence.status}`);
