@@ -545,7 +545,7 @@ function handleUb(message) {
 
 /*
  Function that will display  the github profile of a given username
- Command : !git [uername]
+ Command : !git [username]
 */
 var tmp_json = "";
 function handleGit(message) {
@@ -679,9 +679,43 @@ function handleMal(message) {
 				}});
 				console.log(result.anime.entry[0]);
 			} else {
+				if (!result.myinfo) {
+					message.channel.send("Erreur : pas de profil trouvé !");
+					return ;
+				}
+				message.channel.send(`Voici le profil de ${result.myinfo.user_name}`, {embed : {
+					color: 65399,
+					author: {
+						name: `BOT ${message.guild.name} : MyAnimeList assistant`,
+						icon_url: bot.user.avatarURL
+					},
+					title: `Profil de : ${result.myinfo.user_name}`,
+					url: 'https://myanimelist.net/animelist' + result.myinfo.user_name,
+					fields: [{
+						name: 'Animes en cours :',
+						value: `{result.myinfo.user_watching}`,
+					},{
+						name: 'Animes terminés :',
+						value: `${result.myinfo.user_completed}`,
+						inline: true
+					},{
+						name: 'Animes en pause :',
+						value: `${result.myinfo.user_onhold}`,
+					},{
+						name: 'Animes abandonnés :',
+						value: `${result.myinfo.user_dropped}`,
+						inline: true
+					},{
+						name: 'Animes à regarder :',
+						value: `${result.myinfo.user_plantowatch}`
+					},{
+						name: 'Jours passés à regarder des animes :',
+						value: `${result.myinfo.user_days_spent_watching}`
+					}]
+				}});
 				console.log(result);
 			}
-		})
+		}).catch(console.error());
 	});
 }
 
