@@ -26,6 +26,7 @@ var dispatcher;
 var queue = [];
 
 commands['!setadmin']		= handleSetAdmin;
+commands['!adminlist']		= handleAdminList;
 commands['!help']			= handleHelp;
 commands['!about']			= handleAbout;
 commands['!clean']			= handleClean;
@@ -70,6 +71,22 @@ function handleSetAdmin(message) {
 			roleNames += " ; ";
 	}
 	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
+}
+
+function handleAdminList(message) {
+	if (!message.guild) return ;
+	if (!adminRoles[message.guild.id]) {
+		message.channel.send("Il n'y a pas encore de role pouvant administer le bot, vous pouvez en ajouter en utilisant la commande !setadmin [role]");
+		return ;
+	} else {
+	let roleNames = "";
+		for (let i = 0; i < adminRoles[message.guild.id].length; i++) {
+			roleNames += adminRoles[message.guild.id][i].name;
+			if (i < adminRoles[message.guild.id].length - 1)
+				roleNames += " ; ";
+		}
+		message.channel.send(`Voici la liste des roles pouvant administer le bot : ${roleNames}`);
+	}
 }
 
 /*
