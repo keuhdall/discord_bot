@@ -14,6 +14,7 @@ const keuhdall = '100335365998538752';
 const navet = '94045969099792384';
 
 var commands = [];
+var adminRoles = [];
 var spamMembers = [];
 var spamRoleTime = 15;
 var spamLevel = 0;
@@ -24,6 +25,7 @@ var isSpam;
 var dispatcher;
 var queue = [];
 
+commands['!setadmin']		= handleSetAdmin;
 commands['!help']			= handleHelp;
 commands['!about']			= handleAbout;
 commands['!clean']			= handleClean;
@@ -45,6 +47,30 @@ commands['!git']			= handleGit;
 commands['!cat']			= handleCat;
 commands['!quote']			= handleQuote;
 commands['!mal']			= handleMal;
+
+function handleSetAdmin(message) {
+	if (!message.guild) return ;
+	if (adminRoles[message.guild.id] && isAdmin(message)) return;
+	let arg = patchArgs(message.content.split(" "), 1);
+	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
+	if (!arg) {
+		message.channel.send('Erreur : pas de role précisé')
+		return ;
+	} else if (!role) {
+		message.channel.send(`Erreur : ce rôle n'éxiste pas fdp`);
+		return ;
+	}
+	if (!adminRoles[message.guild.id])
+		adminRoles[message.guild.id] = [];
+	adminRoles[message.guild.id].push(role);
+	let roleNames = "";
+	for (let i = 0; i < adminRoles[message.guild.id].length; i++) {
+		roleNames += adminRoles[message.guild.id][i].name;
+		if (i < adminRoles[message.guild.id].length - 1)
+			roleNames += " ; ";
+	}
+	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
+}
 
 /*
 Function that print a help message with the description of the commands
@@ -715,7 +741,7 @@ function handleMal(message) {
 				}});
 				console.log(result);
 			}
-		}).catch(console.error());
+		});
 	});
 }
 
@@ -740,13 +766,12 @@ function checkSpam() {
  Function that check if the user that issued a message is admin or not.
 */
 function isAdmin(message) {
-	if (!message.guild || message.guild.name !== 'Potager') return true;
-	let Moi = message.guild.roles.find('name', 'Moi');
-	let Keukeu = message.guild.roles.find('name', 'Keukeu <3');
-	if (message.member.roles.has(Moi.id) || message.member.roles.has(Keukeu.id))
-		return true;
-	else
-		return false
+	if (!message.guild) return;
+	for (let i = 0; i < adminRoles[message.guild.id].length; ++i) {
+		if (message.member.roles.has(adminRoles[message.guild.id][i].id))
+			return true;
+	}
+	return false;
 }
 
 function isAlpha(c) {
