@@ -49,6 +49,11 @@ commands['!cat']			= handleCat;
 commands['!quote']			= handleQuote;
 commands['!mal']			= handleMal;
 
+/*
+ Function that grants admin privileges for the bot.
+ If no role is set ; anyone can use this command to set an admin role, otherwise, only a person belonging to the aforementioned admin role can set a new admin role.
+ Command : !setadmin [role name]
+ */
 function handleSetAdmin(message) {
 	if (!message.guild) return ;
 	if (adminRoles[message.guild.id] && isAdmin(message)) return;
@@ -73,6 +78,10 @@ function handleSetAdmin(message) {
 	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
 }
 
+/*
+ Function that gives the list of the admin roles on the server.
+ Command : !adminlist
+*/
 function handleAdminList(message) {
 	if (!message.guild) return ;
 	if (!adminRoles[message.guild.id]) {
