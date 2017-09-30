@@ -104,26 +104,26 @@ Command : !help
 */
 function handleHelp(message) {
 	if (!message.guild) return;
-	let cmdHelp = `Voici la liste des commandes :\`\`\`
-- !help : affiche ce message
-- !about : donne des informations sur le bot
-- !msg : affiche le n-ieme message du channel
-- !clean [-c -t]: permet de clean les derniers messages	du channel courant. -c = count -t = time
-- !roll [nombre de lancés]d[taille du dé]: permet de simuler un lancé de dés
-- !reminder [heure] [message]: envoie un rappel contenant le message donné à l'heure donnée
-- !git [username]: affiche le profil github d'un utilisateur donné
-- !cat : affiche une image de chat trop mignon choisi au hasard
-- !join : invite le bot dans votre channel vocal
-- !leave : fait quitter le channel au bot
-- !play [lien youtube] fait jouer une musique au bot s\'il est dans un channel vocal`;
-	cmdHelp += `\`\`\``;
+	let cmdHelp = `Voici la liste des commandes :
+- **!help** : affiche ce message
+- **!about** : donne des informations sur le bot
+- **!msg** : affiche le n-ieme message du channel
+- **!clean** **[**_-c -t_**]** : permet de clean les derniers messages du channel courant. -c = count -t = time
+- **!roll** **[**_nombre de lancés_**]**d**[**_taille du dé_**]** : permet de simuler un lancé de dés
+- **!reminder** **[**_heure_**]** **[**_message_**]** : envoie un rappel contenant le message donné à l'heure donnée
+- **!git** **[**_username_**]** : affiche le profil github d'un utilisateur donné
+- **!cat** : affiche une image de chat trop mignon choisi au hasard
+- **!join** : invite le bot dans votre channel vocal
+- **!leave** : fait quitter le channel au bot
+- **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal`;
+
 	message.channel.send(cmdHelp);
 	if (isAdmin(message)) {
-		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !\`\`\`
-- !spamlevel : permet de fixer le niveau de spam du serveur [0-3]
-- !spamtime : permet de fixer le temps dans le groupe spammeur
-- !msginterval : permet de fixer le temps minimum entre 2 messages (en ms ; uniquement actif pour un spamlevel >= 2)
-- !kill : kill le bot\`\`\``);
+		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !
+- **!spamlevel** : permet de fixer le niveau de spam du serveur [0-3]
+- **!spamtime** : permet de fixer le temps dans le groupe spammeur
+- **!msginterval** : permet de fixer le temps minimum entre 2 messages (en ms ; uniquement actif pour un spamlevel >= 2)
+- **!kill** : kill le bot`);
 	}
 }
 
@@ -793,6 +793,8 @@ function checkSpam() {
 */
 function isAdmin(message) {
 	if (!message.guild) return;
+	if (!adminRoles[message.guild.id])
+		return false;
 	for (let i = 0; i < adminRoles[message.guild.id].length; ++i) {
 		if (message.member.roles.has(adminRoles[message.guild.id][i].id))
 			return true;
