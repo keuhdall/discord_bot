@@ -4,6 +4,7 @@ const util = require('util');
 const ytdl = require('ytdl-core');
 const request = require('request');
 const striptags = require('striptags');
+const fs = require('fs');
 const S = require('string');
 const xml2js = require('xml2js');
 const streamOptions = { seek: 0, volume: 1 };
@@ -15,6 +16,7 @@ const navet = '94045969099792384';
 
 var commands = [];
 var adminRoles = [];
+let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 var spamMembers = [];
 var spamRoleTime = 15;
 var spamLevel = 0;
@@ -75,6 +77,7 @@ function handleSetAdmin(message) {
 		if (i < adminRoles[message.guild.id].length - 1)
 			roleNames += " ; ";
 	}
+	fs.writeFile('./adminRolesFile.json', JSON.stringify(adminRoles));
 	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
 }
 
