@@ -31,6 +31,7 @@ commands['!setadmin']		= handleSetAdmin;
 commands['!adminlist']		= handleAdminList;
 commands['!help']			= handleHelp;
 commands['!about']			= handleAbout;
+commands['!siou']			= handleSiou;
 commands['!clean']			= handleClean;
 commands['!msg']			= handleMsg;
 commands['!roll']			= handleRoll;
@@ -132,6 +133,12 @@ function handleHelp(message) {
 
 function handleAbout(message) {
 	message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas à me contacter pour plus de renseignements`);
+}
+
+function handleSiou(message) {
+	let str = patchArgs(message.content.split(" "), 1);
+	if (!str || str === "") return;
+	message.channel.send(`Vous avez quoi contre ${str} ?`);
 }
 
 /*
