@@ -1,31 +1,32 @@
 const config = require('./config.js');
-const Discord = require('discord.js');
-const util = require('util');
-const ytdl = require('ytdl-core');
-const request = require('request');
-const striptags = require('striptags');
-const fs = require('fs');
-const S = require('string');
-const xml2js = require('xml2js');
-const streamOptions = { seek: 0, volume: 1 };
-const bot = new Discord.Client();
-const kraive = '94011401940504576';
-const fica = '166226448598695936';
-const keuhdall = '100335365998538752';
-const navet = '94045969099792384';
+	Discord = require('discord.js'),
+	translate = require('google-translate-api'),
+	util = require('util'),
+	ytdl = require('ytdl-core'),
+	request = require('request'),
+	striptags = require('striptags'),
+	fs = require('fs'),
+	S = require('string'),
+	xml2js = require('xml2js'),
+	streamOptions = { seek: 0, volume: 1 },
+	bot = new Discord.Client(),
+	kraive = '94011401940504576',
+	fica = '166226448598695936',
+	keuhdall = '100335365998538752',
+	navet = '94045969099792384';
 
-var commands = [];
-var adminRoles = [];
 let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
-var spamMembers = [];
-var spamRoleTime = 15;
-var spamLevel = 0;
-var msgInterval = 1000;
-var killConfirm = false;
-var tmpMsg;
-var isSpam;
-var dispatcher;
-var queue = [];
+var commands = [];
+	adminRoles = [],
+	spamMembers = [],
+	queue = [],
+	spamRoleTime = 15,
+	spamLevel = 0,
+	msgInterval = 1000,
+	killConfirm = false;
+var tmpMsg,
+	isSpam,
+	dispatcher;
 
 commands['!setadmin']		= handleSetAdmin;
 commands['!adminlist']		= handleAdminList;
@@ -41,6 +42,7 @@ commands['!kill']			= handleKill;
 commands['!spamtime']		= handleSpamtime;
 commands['!msginterval']	= handleMsginterval;
 commands['!reminder']		= handleReminder;
+commands['!t']				= handleTranslate;
 commands['!join']			= handleJoin;
 commands['!leave']			= handleLeave;
 commands['!play']			= handlePlay;
@@ -403,6 +405,26 @@ function handleReminder(message) {
 	}
 }
 
+function handleTranslate(message) {
+	if (!message.guild) return;
+	let tab = message.content.split(" ");
+	if (!tab[1] || !tab[2]) {
+		message.channel.send("Erreur de syntaxe");
+		return;
+	}
+	let lang = tab[1].toLowerCase();
+	let content = patchArgs(tab, 2);
+	switch (lang) {
+		case "en" : return doTranslate(lang, content, message);
+		default : return message.channel.send("Désolé, mais je ne gère pas cette langue :/");
+	}
+}
+
+function doTranslate(lang, content, message) {
+	translate(content, {to : lang}).then(res => {
+		message.channel.send(`**${message.author.username}** : ${res.text}`);
+	});
+}
 
 /*
 Function that will automatically add a reaction to the messages of certain members to troll them
