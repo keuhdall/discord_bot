@@ -1,4 +1,5 @@
-const tools = require('./tools.js'),
+const config = require('./config.js'),
+    tools = require('./tools.js'),
     request = require('request'),
     xml2js = require('xml2js'),
     striptags = require('striptags');
