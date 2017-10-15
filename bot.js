@@ -2,6 +2,7 @@ const config = require('./config.js');
 	Discord = require('discord.js'),
 	shared = require('./shared.js'),
 	tools = require('./tools.js'),
+	admcmds = require('./admincommands.js'),
 	spam = require('./spam.js'),
 	music = require('./music.js'),
 	apis = require('./apis.js'),
@@ -14,7 +15,6 @@ const config = require('./config.js');
 
 let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 var commands = [];
-	killConfirm = false;
 
 //Miscelanous commands
 commands['!siou']			= handleSiou;
@@ -33,8 +33,8 @@ commands['!msg']			= handleMsg;
 commands['!t']				= handleTranslate;
 
 //Admin Commands
-commands['!setadmin']		= handleSetAdmin;
-commands['!kill']			= handleKill;
+commands['!setadmin']		= admcmds.handleSetAdmin;
+commands['!kill']			= admcmds.handleKill;
 
 //Spam commands
 commands['!spamlevel']		= spam.handleSpamlevel;
@@ -54,36 +54,6 @@ commands['!git']			= apis.handleGit;
 commands['!cat']			= apis.handleCat;
 commands['!quote']			= apis.handleQuote;
 commands['!mal']			= apis.handleMal;
-
-/*
- Function that grants admin privileges for the bot.
- If no role is set, anyone can use this command to set an admin role. Otherwise, only a person belonging to the aforementioned admin role can set a new admin role.
- Command : !setadmin [role name]
- */
-function handleSetAdmin(message) {
-	if (!message.guild) return ;
-	if (shared.adminRoles[message.guild.id] && tools.isAdmin(message)) return;
-	let arg = tools.patchArgs(message.content.split(" "), 1);
-	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
-	if (!arg) {
-		message.channel.send('Erreur : pas de role précisé');
-		return ;
-	} else if (!role) {
-		message.channel.send(`Erreur : ce rôle n'éxiste pas fdp`);
-		return ;
-	}
-	if (!shared.adminRoles[message.guild.id])
-		shared.adminRoles[message.guild.id] = [];
-	shared.adminRoles[message.guild.id].push(role);
-	let roleNames = "";
-	for (let i = 0; i < shared.adminRoles[message.guild.id].length; i++) {
-		roleNames += shared.adminRoles[message.guild.id][i].name;
-		if (i < shared.adminRoles[message.guild.id].length - 1)
-			roleNames += " ; ";
-	}
-	//fs.writeFile('./adminRolesFile.json', JSON.stringify(shared.adminRoles));
-	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
-}
 
 /*
  Function that gives the list of the admin roles on the server.
@@ -263,33 +233,6 @@ function handleMember(message) {
 	})
 }
 
-/*
- Function that will kill the bot. It'll have to be restarted through node.
- Command : !kill
-*/
-function handleKill(message) {
-	if (!message.guild ) return ;
-	if (!tools.isAdmin(message)) {
-		message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
-		return ;
-	}
-	killConfirm = true;
-	message.channel.send('Whoah, t\'es sûr de vouloir faire ça bro ?! [y/n]');
-}
-
-function checkConfirm(message)
-{
-	if (message.content === 'y' && killConfirm && tools.isAdmin(message)) {
-		message.channel.send('Ok boss, j\'y vais, à la prochaine !').
-		then(msg => {
-			bot.destroy();
-		});
-	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message)) {
-		message.channel.send('Ouf, merci !');
-		killConfirm = false;
-	}
-}
-
 function checkReminder() {
 	let currentTime =  new Date();
 	for (let i = 0; i < reminder_tab.length; ++i) {
@@ -392,9 +335,9 @@ bot.on("message", message => {
 	spam.checkMessageTime(message);
 	spam.handleSpam(message, bot);
 	if (message.content === 'y' || message.content === 'n')
-		checkConfirm(message);
+		admcmds.checkConfirm(message);
 	else if (message.author.id !== bot.user.id)
-		killConfirm = false;
+		shared.killConfirm = false;
 	let tab = message.content.split(' ');
 	if (commands[tab[0]])
 		commands[tab[0]](message, bot);
