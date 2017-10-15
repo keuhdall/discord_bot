@@ -10,10 +10,10 @@ var botVoiceChannel = null,
 var dispatcher;
 
 module.exports = {
-    /*
-    Function that makes the bot join your voice channel
-    Command : !join
-    */
+/*
+Function that makes the bot join your voice channel
+Command : !join
+*/
     handleJoin : message => {
         if (!message.guild) return ;
         if (!message.member.voiceChannel)
@@ -28,7 +28,7 @@ module.exports = {
         }
     },
 
-    sendMusicEmbed : (message, music) => {
+    sendMusicEmbed : (message, music, bot) => {
         let time = new Object();
         time = getTimeFormat(music.duration);
         message.channel.send('', {embed : {
@@ -51,11 +51,11 @@ module.exports = {
         }});
     },
 
-    /*
-    const Function that makes the bor play a song provided through a youtube link
-    Command : !play [link]
-    */
-    handlePlay : message => {
+/*
+const Function that makes the bor play a song provided through a youtube link
+Command : !play [link]
+*/
+    handlePlay : (message, bot) => {
         let tmp = queue[0] ? true : false;
         let tab = message.content.split(' ');
         let music = new Object();
@@ -73,7 +73,7 @@ module.exports = {
                 music.title = info.title;
                 music.duration = info.length_seconds;
                 if (!tmp)
-                    sendMusicEmbed(message, music);
+                    sendMusicEmbed(message, music, bot);
                 else
                     message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
             }).catch(console.error());
@@ -86,7 +86,7 @@ module.exports = {
                 console.log(end);
                 queue.shift();
                 if (queue[0]) {
-                    sendMusicEmbed(message, queue[0]);
+                    sendMusicEmbed(message, queue[0], bot);
                     stream = ytdl(queue[0].url, {filter : 'audioonly'});
                     dispatcher = botConnection.playStream(stream, streamOptions);
                 }
@@ -95,10 +95,10 @@ module.exports = {
         message.delete();
     },
 
-    /*
-    Function that makes the bot leave the voice channel he is currently in
-    Command : !leave
-    */
+/*
+Function that makes the bot leave the voice channel he is currently in
+Command : !leave
+*/
     handleLeave : message => {
         if (!botVoiceChannel)
             message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
