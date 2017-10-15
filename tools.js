@@ -1,4 +1,4 @@
-modules.exports = {
+module.exports = {
     getTimeFormat : time => {
         let newTime = new Object;
         newTime.hours = time / 3600;
