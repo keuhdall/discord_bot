@@ -424,7 +424,7 @@ bot.on('guildMemberRemove', member => {
 		member.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
-setInterval(spam.checkSpam(bot), 60000);
+setInterval(() => {spam.checkSpam(bot)}, 60000);
 setInterval(checkReminder, 60000);
 setInterval(checkYouKnowWho, 10000);
 bot.login(config.token);
