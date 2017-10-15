@@ -9,12 +9,12 @@ var botVoiceChannel = null,
 
 var dispatcher;
 
-module.export = {
+module.exports = {
     /*
     Function that makes the bot join your voice channel
     Command : !join
     */
-    handleJoin = message => {
+    handleJoin : message => {
         if (!message.guild) return ;
         if (!message.member.voiceChannel)
             message.channel.send('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
@@ -28,7 +28,7 @@ module.export = {
         }
     },
 
-    sendMusicEmbed = (message, music) => {
+    sendMusicEmbed : (message, music) => {
         let time = new Object();
         time = getTimeFormat(music.duration);
         message.channel.send('', {embed : {
@@ -55,7 +55,7 @@ module.export = {
     const Function that makes the bor play a song provided through a youtube link
     Command : !play [link]
     */
-    handlePlay = message => {
+    handlePlay : message => {
         let tmp = queue[0] ? true : false;
         let tab = message.content.split(' ');
         let music = new Object();
@@ -99,7 +99,7 @@ module.export = {
     Function that makes the bot leave the voice channel he is currently in
     Command : !leave
     */
-    handleLeave = message => {
+    handleLeave : message => {
         if (!botVoiceChannel)
             message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
         else {
@@ -109,12 +109,12 @@ module.export = {
         }
     },
 
-    handleList = message => {
+    handleList : message => {
         let titles = queue.map((a) => {return a.title;});
         message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
     },
 
-    handleSkip = message => {
+    handleSkip : message => {
         if (queue[0] && dispatcher) {
             dispatcher.end();
         }
