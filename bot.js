@@ -11,6 +11,7 @@ const config = require('./config.js');
 	fs = require('fs'),
 	bot = new Discord.Client(),
 	fica = '166226448598695936',
+	siu = '296175225517768705',
 	keuhdall = '100335365998538752';
 
 let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
@@ -105,10 +106,8 @@ Function that will automatically add a reaction to the messages of certain membe
 */
 function handleReactions(message) {
 	if (!message.guild) return ;
-	if (message.author.id === fica)
+	if (message.author.id === fica || message.author.id === siu)
 		message.react('🍗');
-		//console.log('TODO');
-		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 }
 
 function isAlpha(c) {
