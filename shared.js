@@ -1,1 +1,3 @@
-var adminRoles = [];
+module.exports = {
+    adminRoles : []
+}
