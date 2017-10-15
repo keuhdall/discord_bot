@@ -1,5 +1,6 @@
 const config = require('./config.js');
 	Discord = require('discord.js'),
+	tools = require('./tools.js'),
 	music = require('./music.js'),
 	apis = require('./apis.js'),
 	translate = require('google-translate-api'),
@@ -68,7 +69,7 @@ commands['!mal']			= apis.handleMal;
 function handleSetAdmin(message) {
 	if (!message.guild) return ;
 	if (adminRoles[message.guild.id] && isAdmin(message)) return;
-	let arg = patchArgs(message.content.split(" "), 1);
+	let arg = tools.patchArgs(message.content.split(" "), 1);
 	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
 	if (!arg) {
 		message.channel.send('Erreur : pas de role précisé')
@@ -144,7 +145,7 @@ function handleAbout(message) {
 }
 
 function handleSiou(message) {
-	let str = patchArgs(message.content.split(" "), 1);
+	let str = tools.patchArgs(message.content.split(" "), 1);
 	if (!str || str === "") return;
 	message.channel.send(`Vous avez quoi contre ${str} ?`);
 }
@@ -387,7 +388,7 @@ function handleReminder(message) {
 					message.channel.send("Erreur : la date est mal formatée !");
 					return;
 				} else {
-					let content = patchArgs(message.content.split(" "), 2);
+					let content = tools.patchArgs(message.content.split(" "), 2);
 					if (content !== "") {
 						reminder_obj.message = message;
 						reminder_obj.hours = tab_time[0];
@@ -419,7 +420,7 @@ function handleTranslate(message) {
 		return;
 	}
 	let lang = tab[1].toLowerCase();
-	let content = patchArgs(tab, 2);
+	let content = tools.patchArgs(tab, 2);
 	switch (lang) {
 		case "en" : return doTranslate(lang, content, message);
 		default : return message.channel.send("Désolé, mais je ne gère pas cette langue :/");
@@ -527,16 +528,6 @@ function isAdmin(message) {
 
 function isAlpha(c) {
 	return (/^[A-Z]$/i.test(c));
-}
-
-function patchArgs(args, index) {
-	let str = "";
-	for (let i = index; i < args.length; i++) {
-		str += args[i];
-		if (i != args.length - 1)
-			str += " ";
-	}
-	return str;
 }
 
 /*

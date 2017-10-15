@@ -1,6 +1,7 @@
 
 
-const ytdl = require('ytdl-core'),
+const tools = require('./tools.js'),
+    ytdl = require('ytdl-core'),
     streamOptions = { seek: 0, volume: 1 };
 
 var botVoiceChannel = null,
@@ -9,21 +10,9 @@ var botVoiceChannel = null,
 
 var dispatcher;
 
-let getTimeFormat = time => {
-	let newTime = new Object;
-	newTime.hours = time / 3600;
-	newTime.hours = Math.trunc(newTime.hours);
-	newTime.minutes = time / 60;
-	newTime.minutes = Math.trunc(newTime.minutes);
-	newTime.minutes %= 60;
-	newTime.seconds = time % 3600;
-	newTime.seconds %= 60;
-	return (newTime);
-}
-
 let = sendMusicEmbed = (message, music, bot) => {
     let time = new Object();
-    time = getTimeFormat(music.duration);
+    time = tools.getTimeFormat(music.duration);
     message.channel.send('', {embed : {
         color: 65399,
         author: {
