@@ -12,7 +12,7 @@ module.exports = {
 Function that will search the given keywords on urbandictionary
 Command : !ub ["your keywords here"]
 */
-    handleUb : (message) => {
+    handleUb : message => {
         if (!message.guild) return;
         let tab = message.content.split("\"");
         if (!tab[1]) {
@@ -39,7 +39,7 @@ Command : !ub ["your keywords here"]
 Function that will display  the github profile of a given username
 Command : !git [username]
 */
-    handleGit : (message) => {
+    handleGit : message => {
         if (!message.guild) return;
         let tab = message.content.split(" ");
         if (!tab[1]) {
@@ -48,9 +48,8 @@ Command : !git [username]
         }
         let git_url = "https://api.github.com/users/" + tab[1];
         let json_get;
-        request.get({url: git_url, headers: {
-            'User-Agent': 'keuhdall'}
-        }).on('data', data_get => {
+        request.get({url: git_url, headers: {'User-Agent': 'keuhdall'}})
+        .on('data', data_get => {
             try {
                 if (!tmp_json)
                     json_get = JSON.parse(data_get.toString());
@@ -93,7 +92,7 @@ Command : !git [username]
 Function that will send a random picture of a cute cat_url
 Command : !cat
 */
-    handleCat : (message) => {
+    handleCat : message => {
         if (!message.guild) return;
         let cat_url = "https://thecatapi.com/api/images/get?format=xml";
         request.get(cat_url).on('data', data_get => {
@@ -104,7 +103,7 @@ Command : !cat
         });
     },
 
-    handleQuote : (message) => {
+    handleQuote : message => {
         if (!message.guild) return;
         //let quote_url = "http://quotesondesign.com/api/3.0/api-3.0.json";
         let quote_url = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1"
@@ -135,9 +134,8 @@ Command : !cat
                 message.channel.send("Erreur : pas de profil précisé !");
                 return ;
             }
-        } else {
+        } else
             mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tools.patchArgs(tab, 1).replace(" ", "+");
-        }
         request.get(mal_url, {
             'auth': {
                 'user': config.mal_username,
@@ -147,8 +145,7 @@ Command : !cat
         }).on('data', data_get => {
             let parse = xml2js.parseString;
             parse(data_get.toString(), (err, result) => {
-                if (search_type === 'anime')
-                {
+                if (search_type === 'anime') {
                     message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
                         color: 65399,
                         author: {
@@ -168,7 +165,6 @@ Command : !cat
                             inline: true
                         }]
                     }});
-                    console.log(result.anime.entry[0]);
                 } else {
                     if (!result.myinfo) {
                         message.channel.send("Erreur : pas de profil trouvé !");
@@ -204,7 +200,6 @@ Command : !cat
                             value: `${result.myinfo.user_days_spent_watching}`
                         }]
                     }});
-                    console.log(result);
                 }
             });
         });
