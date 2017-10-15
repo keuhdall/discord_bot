@@ -2,6 +2,7 @@ const config = require('./config.js'),
     tools = require('./tools.js'),
     request = require('request'),
     xml2js = require('xml2js'),
+    S = require('string'),
     striptags = require('striptags');
 
 var tmp_json = "";
