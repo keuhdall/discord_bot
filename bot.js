@@ -106,7 +106,8 @@ Function that will automatically add a reaction to the messages of certain membe
 function handleReactions(message) {
 	if (!message.guild) return ;
 	if (message.author.id === fica)
-		console.log('TODO');
+		message.react('\:poultry_leg:');
+		//console.log('TODO');
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 }
 
