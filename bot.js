@@ -1,14 +1,13 @@
 const config = require('./config.js');
 	Discord = require('discord.js'),
+	music = require('./music.js'),
 	translate = require('google-translate-api'),
-	util = require('util'),
-	ytdl = require('ytdl-core'),
 	request = require('request'),
 	striptags = require('striptags'),
 	fs = require('fs'),
 	S = require('string'),
 	xml2js = require('xml2js'),
-	streamOptions = { seek: 0, volume: 1 },
+	
 	bot = new Discord.Client(),
 	kraive = '94011401940504576',
 	fica = '166226448598695936',
@@ -19,14 +18,12 @@ let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 var commands = [];
 	adminRoles = [],
 	spamMembers = [],
-	queue = [],
 	spamRoleTime = 15,
 	spamLevel = 0,
 	msgInterval = 1000,
 	killConfirm = false;
 var tmpMsg,
-	isSpam,
-	dispatcher;
+	isSpam;
 
 commands['!setadmin']		= handleSetAdmin;
 commands['!adminlist']		= handleAdminList;
@@ -43,11 +40,11 @@ commands['!spamtime']		= handleSpamtime;
 commands['!msginterval']	= handleMsginterval;
 commands['!reminder']		= handleReminder;
 commands['!t']				= handleTranslate;
-commands['!join']			= handleJoin;
-commands['!leave']			= handleLeave;
-commands['!play']			= handlePlay;
-commands['!list']			= handleList;
-commands['!skip']			= handleSkip;
+commands['!join']			= music.handleJoin;
+commands['!leave']			= music.handleLeave;
+commands['!play']			= music.handlePlay;
+commands['!list']			= music.handleList;
+commands['!skip']			= music.handleSkip;
 commands['!ub']				= handleUb;
 commands['!git']			= handleGit;
 commands['!cat']			= handleCat;
@@ -486,118 +483,6 @@ function handleSpam(message) {
 				break ;
 		}
 	}).catch(console.error());
-}
-
-var botVoiceChannel = null;
-var botConnection = null;
-/*
- Function that makes the bot join your voice channel
- Command : !join
-*/
-function handleJoin(message) {
-	if (!message.guild) return ;
-	if (!message.member.voiceChannel)
-		message.channel.send('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
-	else {
-		botVoiceChannel = message.member.voiceChannel;
-		message.member.voiceChannel.join()
-		.then(connection => {
-			botConnection = connection;
-		})
-		.catch(console.error());
-	}
-}
-
-function sendMusicEmbed(message, music) {
-	let time = new Object();
-	time = getTimeFormat(music.duration);
-	message.channel.send('', {embed : {
-		color: 65399,
-		author: {
-			name: `BOT ${message.guild.name} : MODE DJ`,
-			icon_url: bot.user.avatarURL
-		},
-		title: 'Now playing :',
-		fields: [{
-			name: 'Titre : ',
-			value: `${music.title}`
-		}, {
-			name: 'Durée :',
-			value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
-		}, {
-			name: 'Proposée par :',
-			value: `${music.author}`
-		}]
-	}});
-}
-
-/*
- Function that makes the bor play a song provided through a youtube link
- Command : !play [link]
- */
-function handlePlay(message) {
-	let tmp = queue[0] ? true : false;
-	let tab = message.content.split(' ');
-	let music = new Object();
-	if (!tab[1]) {
-		message.channel.send('Il faut me passer un lien youtube !');
-		return ;
-	} else if (!botConnection) {
-		message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
-		return ;
-	} else {
-		music.url = tab[1];
-		music.author = message.author.username;
-		ytdl.getInfo(tab[1])
-		.then(info => {
-			music.title = info.title;
-			music.duration = info.length_seconds;
-			if (!tmp)
-				sendMusicEmbed(message, music);
-			else
-				message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
-		}).catch(console.error());
-		if (!queue[0]) {
-			const stream = ytdl(music.url, {filter : 'audioonly'});
-			dispatcher = botConnection.playStream(stream, streamOptions);
-		}
-		queue.push(music);
-		dispatcher.on('end', (end) => {
-			console.log(end);
-			queue.shift();
-			if (queue[0]) {
-				sendMusicEmbed(message, queue[0]);
-				stream = ytdl(queue[0].url, {filter : 'audioonly'});
-				dispatcher = botConnection.playStream(stream, streamOptions);
-			}
-		});
-	}
-	message.delete();
-}
-
-/*
- Function that makes the bot leave the voice channel he is currently in
- Command : !leave
-*/
-function handleLeave(message) {
-	if (!botVoiceChannel)
-		message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
-	else {
-		botVoiceChannel.leave();
-		botVoiceChannel = null;
-		botConnection = null;
-	}
-}
-
-function handleList(message) {
-	let titles = queue.map((a) => {return a.title;});
-	message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
-}
-
-function handleSkip(message) {
-	if (queue[0] && dispatcher) {
-		dispatcher.end();
-	}
 }
 
 /*
