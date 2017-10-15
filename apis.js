@@ -1,4 +1,4 @@
-const tools = require('tools.js'),
+const tools = require('./tools.js'),
     request = require('request'),
     xml2js = require('xml2js'),
     striptags = require('striptags');
