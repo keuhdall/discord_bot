@@ -1,5 +1,6 @@
 const config = require('./config.js');
 	Discord = require('discord.js'),
+	shared = require('./shared.js'),
 	tools = require('./tools.js'),
 	spam = require('./spam.js'),
 	music = require('./music.js'),
@@ -13,7 +14,6 @@ const config = require('./config.js');
 
 let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 var commands = [];
-	adminRoles = [],
 	killConfirm = false;
 
 //Miscelanous commands
@@ -62,7 +62,7 @@ commands['!mal']			= apis.handleMal;
  */
 function handleSetAdmin(message) {
 	if (!message.guild) return ;
-	if (adminRoles[message.guild.id] && tools.isAdmin(message, adminRoles)) return;
+	if (shared.adminRoles[message.guild.id] && tools.isAdmin(message)) return;
 	let arg = tools.patchArgs(message.content.split(" "), 1);
 	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
 	if (!arg) {
@@ -72,16 +72,16 @@ function handleSetAdmin(message) {
 		message.channel.send(`Erreur : ce rôle n'éxiste pas fdp`);
 		return ;
 	}
-	if (!adminRoles[message.guild.id])
-		adminRoles[message.guild.id] = [];
-	adminRoles[message.guild.id].push(role);
+	if (!shared.adminRoles[message.guild.id])
+		shared.adminRoles[message.guild.id] = [];
+	shared.adminRoles[message.guild.id].push(role);
 	let roleNames = "";
-	for (let i = 0; i < adminRoles[message.guild.id].length; i++) {
-		roleNames += adminRoles[message.guild.id][i].name;
-		if (i < adminRoles[message.guild.id].length - 1)
+	for (let i = 0; i < shared.adminRoles[message.guild.id].length; i++) {
+		roleNames += shared.adminRoles[message.guild.id][i].name;
+		if (i < shared.adminRoles[message.guild.id].length - 1)
 			roleNames += " ; ";
 	}
-	//fs.writeFile('./adminRolesFile.json', JSON.stringify(adminRoles));
+	//fs.writeFile('./adminRolesFile.json', JSON.stringify(shared.adminRoles));
 	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
 }
 
@@ -91,14 +91,14 @@ function handleSetAdmin(message) {
 */
 function handleAdminList(message) {
 	if (!message.guild) return ;
-	if (!adminRoles[message.guild.id]) {
+	if (!shared.adminRoles[message.guild.id]) {
 		message.channel.send("Il n'y a pas encore de role pouvant administer le bot, vous pouvez en ajouter en utilisant la commande !setadmin [role]");
 		return ;
 	} else {
 	let roleNames = "";
-		for (let i = 0; i < adminRoles[message.guild.id].length; i++) {
-			roleNames += adminRoles[message.guild.id][i].name;
-			if (i < adminRoles[message.guild.id].length - 1)
+		for (let i = 0; i < shared.adminRoles[message.guild.id].length; i++) {
+			roleNames += shared.adminRoles[message.guild.id][i].name;
+			if (i < shared.adminRoles[message.guild.id].length - 1)
 				roleNames += " ; ";
 		}
 		message.channel.send(`Voici la liste des roles pouvant administer le bot : ${roleNames}`);
@@ -125,7 +125,7 @@ function handleHelp(message) {
 - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal`;
 
 	message.channel.send(cmdHelp);
-	if (tools.isAdmin(message, adminRoles)) {
+	if (tools.isAdmin(message)) {
 		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !
 - **!spamlevel** : permet de fixer le niveau de spam du serveur [0-3]
 - **!spamtime** : permet de fixer le temps dans le groupe spammeur
@@ -269,7 +269,7 @@ function handleMember(message) {
 */
 function handleKill(message) {
 	if (!message.guild ) return ;
-	if (!tools.isAdmin(message, adminRoles)) {
+	if (!tools.isAdmin(message)) {
 		message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
 		return ;
 	}
@@ -279,12 +279,12 @@ function handleKill(message) {
 
 function checkConfirm(message)
 {
-	if (message.content === 'y' && killConfirm && tools.isAdmin(message, adminRoles)) {
+	if (message.content === 'y' && killConfirm && tools.isAdmin(message)) {
 		message.channel.send('Ok boss, j\'y vais, à la prochaine !').
 		then(msg => {
 			bot.destroy();
 		});
-	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message, adminRoles)) {
+	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message)) {
 		message.channel.send('Ouf, merci !');
 		killConfirm = false;
 	}

@@ -1,14 +1,15 @@
+const shared = require('./shared.js');
+
 module.exports = {
 /*
 Function that check if the user that issued a message is admin or not.
 */
-    isAdmin : (message, adminRoles) => {
+    isAdmin : (message) => {
         if (!message.guild) return;
-        let id = message.guild.id;
-        if (!adminRoles[id])
+        if (!shared.adminRoles[message.guild.id])
             return false;
-        for (let i = 0; i < adminRoles[id].length; ++i) {
-            if (message.member.roles.has(adminRoles[id][i].id))
+        for (let i = 0; i < shared.adminRoles[message.guild.id].length; ++i) {
+            if (message.member.roles.has(shared.adminRoles[message.guild.id][i].id))
                 return true;
         }
         return false;
