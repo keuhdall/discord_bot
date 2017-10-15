@@ -62,7 +62,7 @@ commands['!mal']			= apis.handleMal;
  */
 function handleSetAdmin(message) {
 	if (!message.guild) return ;
-	if (adminRoles[message.guild.id] && tools.isAdmin(message)) return;
+	if (adminRoles[message.guild.id] && tools.isAdmin(message, adminRoles)) return;
 	let arg = tools.patchArgs(message.content.split(" "), 1);
 	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
 	if (!arg) {
@@ -125,7 +125,7 @@ function handleHelp(message) {
 - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal`;
 
 	message.channel.send(cmdHelp);
-	if (tools.isAdmin(message)) {
+	if (tools.isAdmin(message, adminRoles)) {
 		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !
 - **!spamlevel** : permet de fixer le niveau de spam du serveur [0-3]
 - **!spamtime** : permet de fixer le temps dans le groupe spammeur
@@ -269,7 +269,7 @@ function handleMember(message) {
 */
 function handleKill(message) {
 	if (!message.guild ) return ;
-	if (!tools.isAdmin(message)) {
+	if (!tools.isAdmin(message, adminRoles)) {
 		message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
 		return ;
 	}
@@ -279,12 +279,12 @@ function handleKill(message) {
 
 function checkConfirm(message)
 {
-	if (message.content === 'y' && killConfirm && tools.isAdmin(message)) {
+	if (message.content === 'y' && killConfirm && tools.isAdmin(message, adminRoles)) {
 		message.channel.send('Ok boss, j\'y vais, à la prochaine !').
 		then(msg => {
 			bot.destroy();
 		});
-	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message)) {
+	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message, adminRoles)) {
 		message.channel.send('Ouf, merci !');
 		killConfirm = false;
 	}

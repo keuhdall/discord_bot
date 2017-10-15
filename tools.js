@@ -2,7 +2,7 @@ module.exports = {
 /*
 Function that check if the user that issued a message is admin or not.
 */
-    isAdmin : message => {
+    isAdmin : (message, adminRoles) => {
         if (!message.guild) return;
         if (!adminRoles[message.guild.id])
             return false;
