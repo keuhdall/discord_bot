@@ -9,6 +9,29 @@ var botVoiceChannel = null,
 
 var dispatcher;
 
+let = sendMusicEmbed = (message, music, bot) => {
+    let time = new Object();
+    time = getTimeFormat(music.duration);
+    message.channel.send('', {embed : {
+        color: 65399,
+        author: {
+            name: `BOT ${message.guild.name} : MODE DJ`,
+            icon_url: bot.user.avatarURL
+        },
+        title: 'Now playing :',
+        fields: [{
+            name: 'Titre : ',
+            value: `${music.title}`
+        }, {
+            name: 'Durée :',
+            value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
+        }, {
+            name: 'Proposée par :',
+            value: `${music.author}`
+        }]
+    }});
+}
+
 module.exports = {
 /*
 Function that makes the bot join your voice channel
@@ -26,29 +49,6 @@ Command : !join
             })
             .catch(console.error());
         }
-    },
-
-    sendMusicEmbed : (message, music, bot) => {
-        let time = new Object();
-        time = getTimeFormat(music.duration);
-        message.channel.send('', {embed : {
-            color: 65399,
-            author: {
-                name: `BOT ${message.guild.name} : MODE DJ`,
-                icon_url: bot.user.avatarURL
-            },
-            title: 'Now playing :',
-            fields: [{
-                name: 'Titre : ',
-                value: `${music.title}`
-            }, {
-                name: 'Durée :',
-                value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
-            }, {
-                name: 'Proposée par :',
-                value: `${music.author}`
-            }]
-        }});
     },
 
 /*
