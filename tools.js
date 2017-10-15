@@ -4,10 +4,11 @@ Function that check if the user that issued a message is admin or not.
 */
     isAdmin : (message, adminRoles) => {
         if (!message.guild) return;
-        if (!adminRoles[message.guild.id])
+        let id = message.guild.id;
+        if (!adminRoles[id])
             return false;
-        for (let i = 0; i < adminRoles[message.guild.id].length; ++i) {
-            if (message.member.roles.has(adminRoles[message.guild.id][i].id))
+        for (let i = 0; i < adminRoles[id].length; ++i) {
+            if (message.member.roles.has(adminRoles[id][i].id))
                 return true;
         }
         return false;
