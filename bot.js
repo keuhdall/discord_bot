@@ -57,7 +57,7 @@ commands['!mal']			= apis.handleMal;
 
 /*
  Function that grants admin privileges for the bot.
- If no role is set ; anyone can use this command to set an admin role, otherwise, only a person belonging to the aforementioned admin role can set a new admin role.
+ If no role is set, anyone can use this command to set an admin role. Otherwise, only a person belonging to the aforementioned admin role can set a new admin role.
  Command : !setadmin [role name]
  */
 function handleSetAdmin(message) {
@@ -66,7 +66,7 @@ function handleSetAdmin(message) {
 	let arg = tools.patchArgs(message.content.split(" "), 1);
 	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
 	if (!arg) {
-		message.channel.send('Erreur : pas de role précisé')
+		message.channel.send('Erreur : pas de role précisé');
 		return ;
 	} else if (!role) {
 		message.channel.send(`Erreur : ce rôle n'éxiste pas fdp`);
@@ -81,7 +81,7 @@ function handleSetAdmin(message) {
 		if (i < adminRoles[message.guild.id].length - 1)
 			roleNames += " ; ";
 	}
-	fs.writeFile('./adminRolesFile.json', JSON.stringify(adminRoles));
+	//fs.writeFile('./adminRolesFile.json', JSON.stringify(adminRoles));
 	message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
 }
 
