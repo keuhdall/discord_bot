@@ -1,6 +1,7 @@
 const config = require('./config.js');
 	Discord = require('discord.js'),
 	tools = require('./tools.js'),
+	spam = require('./spam.js'),
 	music = require('./music.js'),
 	apis = require('./apis.js'),
 	translate = require('google-translate-api'),
@@ -13,14 +14,7 @@ const config = require('./config.js');
 let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 var commands = [];
 	adminRoles = [],
-	spamMembers = [],
-	spamRoleTime = 15,
-	spamLevel = 0,
-	msgInterval = 1000,
 	killConfirm = false;
-var tmpMsg,
-	isSpam;
-
 
 //Miscelanous commands
 commands['!siou']			= handleSiou;
@@ -43,9 +37,9 @@ commands['!setadmin']		= handleSetAdmin;
 commands['!kill']			= handleKill;
 
 //Spam commands
-commands['!spamlevel']		= handleSpamlevel;
-commands['!spamtime']		= handleSpamtime;
-commands['!msginterval']	= handleMsginterval;
+commands['!spamlevel']		= spam.handleSpamlevel;
+commands['!spamtime']		= spam.handleSpamtime;
+commands['!msginterval']	= spam.handleMsginterval;
 
 //Music commands
 commands['!join']			= music.handleJoin;
@@ -68,7 +62,7 @@ commands['!mal']			= apis.handleMal;
  */
 function handleSetAdmin(message) {
 	if (!message.guild) return ;
-	if (adminRoles[message.guild.id] && isAdmin(message)) return;
+	if (adminRoles[message.guild.id] && tools.isAdmin(message)) return;
 	let arg = tools.patchArgs(message.content.split(" "), 1);
 	let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
 	if (!arg) {
@@ -131,7 +125,7 @@ function handleHelp(message) {
 - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal`;
 
 	message.channel.send(cmdHelp);
-	if (isAdmin(message)) {
+	if (tools.isAdmin(message)) {
 		message.author.send(`Psssst ! T'as aussi des commandes admin hyper swag !
 - **!spamlevel** : permet de fixer le niveau de spam du serveur [0-3]
 - **!spamtime** : permet de fixer le temps dans le groupe spammeur
@@ -252,27 +246,6 @@ function handleRoll(message) {
 }
 
 /*
- Function that allows an admin to change the tolerance level of the bot towards spam.
- Command : !spamlevel [level] (optionnal)
-*/
-function handleSpamlevel(message) {
-	if (!message.guild) return ;
-	let tab = message.content.split(" ");
-	if (isAdmin(message))
-	{
-		if (!tab[1])
-			message.channel.send(`Le niveau de spam est actuellement réglé à ${spamLevel}`);
-		else {
-			if (!isNaN(tab[1]) && tab[1] >= 0 && tab[1] <= 3) {
-				spamLevel = tab[1];
-				message.channel.send(`Le niveau de spam a bien été réglé à ${spamLevel}`);
-			} else
-				message.channel.send(`Erreur : le niveau de spam doit être réglé entre 0 et 3. ${tab[1]} n'est pas une valeur correcte`);
-		}
-	}
-}
-
-/*
  Function that allows me to recover my permissions if i mess to much with the bot
  Command : !member [only works with my ID ; you have to edit the code]
 */
@@ -296,7 +269,7 @@ function handleMember(message) {
 */
 function handleKill(message) {
 	if (!message.guild ) return ;
-	if (!isAdmin(message)) {
+	if (!tools.isAdmin(message)) {
 		message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
 		return ;
 	}
@@ -306,59 +279,14 @@ function handleKill(message) {
 
 function checkConfirm(message)
 {
-	if (message.content === 'y' && killConfirm && isAdmin(message)) {
+	if (message.content === 'y' && killConfirm && tools.isAdmin(message)) {
 		message.channel.send('Ok boss, j\'y vais, à la prochaine !').
 		then(msg => {
 			bot.destroy();
 		});
-	} else if (message.content === 'n' && killConfirm && isAdmin(message)) {
+	} else if (message.content === 'n' && killConfirm && tools.isAdmin(message)) {
 		message.channel.send('Ouf, merci !');
 		killConfirm = false;
-	}
-}
-
-/*
- Function that allows an admin to edit the time in the spamRole
- Command : !spamtime [time] (optionnal)
-*/
-function handleSpamtime(message) {
-	if (!message.guild) return ;
-	let tab = message.content.split(" ");
-	if (!isAdmin(message)) {
-		message.channel.send('T\'as pas le droit.');
-		return ;
-	} else {
-		if (tab[1]) {
-			if (!isNaN(tab[1])) {
-				spamRoleTime = tab[1];
-				message.channel.send(`Le temps dans le groupe spammeur a été fixé à ${spamRoleTime} minute(s)`);
-			} else
-				message.channel.send('Erreur de syntaxe');
-		} else
-			message.channel.send(`Le temps dans le groupe spammeur est actuellement fixé à ${spamRoleTime} minute(s)`);
-	}
-}
-
-/*
- Function that sets the meximum interval of time between 2 messages for the same author
- Command : !msginterval [interval] (optionnal)
-*/
-function handleMsginterval(message) {
-	if (!message.guild) return ;
-	let tab = message.content.split(" ");
-	if (!isAdmin(message)) {
-		message.channel.send('T\'as pas le droit.');
-		return ;
-	} else {
-		if (!tab[1]) {
-			message.channel.send(`L'interval entre 2 messages est actuellement fixé à ${msgInterval} millisecondes`);
-		} else {
-			if (!isNaN(tab[1])) {
-				msgInterval = tab[1];
-				message.channel.send(`L'interval entre 2 messages a été fixé à ${msgInterval} millisecondes`);
-			} else
-				message.channel.send('Erreur de syntaxe');
-		}
 	}
 }
 
@@ -443,120 +371,8 @@ function handleReactions(message) {
 		//message.react(bot.emojis.find('name', 'poop')).catch(console.error)
 }
 
-/*
- Function that prevent spam. Will chenge user's role and deprive him from his permissions.
-*/
-function handleSpam(message) {
-	if (!message.guild || message.guild.name !== 'Potager') return ;
-	if (message.author.id === bot.user.id || isAdmin(message)) return ;
-	message.channel.fetchMessages({limit : 4})
-	.then(messages => {
-		let spamRole = Array();
-		spamRole.push(message.guild.roles.find('name', 'Spammeur'));
-		let msg = messages.array();
-		let same = true;
-		for (let i = 1; i < 4; i++) {
-			if (message.content !== msg[i].content)
-				same = false;
-		}
-		switch (parseInt(spamLevel))
-		{
-			case 0:
-				break ;
-			case 1:
-				if (same === true) {
-					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
-					spamMembers.push(spammer);
-					message.member.setRoles(spamRole);
-					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
-				}
-				break ;
-			case 2:
-				if (same === true || isSpam === true) {
-					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
-					spamMembers.push(spammer);
-					message.member.setRoles(spamRole);
-					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
-				}
-				break ;
-			case 3:
-				if (same === true || isSpam === true || (message.content.length >=5 && getUppercasePercentage(message.content) >= 50)) {
-					let spammer = {member:message.member, time:0, oldRoles:message.member.roles};
-					spamMembers.push(spammer);
-					message.member.setRoles(spamRole);
-					message.author.send(`T'en a pas marre de spam éspèce d'idiot ? Tu vas te calmer ${spamRoleTime} minute(s) avant de pouvoir parler à nouveau.`);
-				}
-				break ;
-			default:
-				console.log('ERROR : the tolerance level has been set to a a wtong value');
-				console.log(`Current tolerance level : ${spamLevel}`);
-				break ;
-		}
-	}).catch(console.error());
-}
-
-/*
- Function called every minutes that will check if the members belonging to spamRole are able to recover their real role
-*/
-function checkSpam() {
-	let potager = bot.guilds.find('name', 'Potager');
-	let spamRole = [];
-	if (!potager) return ;
-	spamRole.push(potager.roles.find('name', 'Spammeur'));
-	for (let i = 0; i < spamMembers.length; i++) {
-			spamMembers[i].time++;
-		if (spamMembers[i].time > spamRoleTime) {
-			spamMembers[i].member.setRoles(spamMembers[i].oldRoles);
-			spamMembers.splice(i, 1);
-		}
-	}
-}
-
-/*
- Function that check if the user that issued a message is admin or not.
-*/
-function isAdmin(message) {
-	if (!message.guild) return;
-	if (!adminRoles[message.guild.id])
-		return false;
-	for (let i = 0; i < adminRoles[message.guild.id].length; ++i) {
-		if (message.member.roles.has(adminRoles[message.guild.id][i].id))
-			return true;
-	}
-	return false;
-}
-
 function isAlpha(c) {
 	return (/^[A-Z]$/i.test(c));
-}
-
-/*
- Function that returns the percentage of uppercase character in a string
-*/
-function getUppercasePercentage (content) {
-	let countUppercase = 0;
-	for (let i = 0; i < content.length; i++) {
-		if (content[i] === content[i].toUpperCase() && isAlpha(content[i]))
-			countUppercase++;
-	}
-	return ((countUppercase / content.length) * 100);
-}
-
-function checkMessageTime(message)
-{
-	if (!tmpMsg) {
-		tmpMsg = message;
-		isSpam = false;
-		return ;
-	}
-	if (tmpMsg.author === message.author) {
-		if (message.createdTimestamp - tmpMsg.createdTimestamp < msgInterval) {
-			isSpam = true;
-		} else {
-			isSpam = false;
-		}
-	}
-	tmpMsg = message;
 }
 
 var status_old = "";
@@ -573,8 +389,8 @@ function checkYouKnowWho() {
 
 bot.on("message", message => {
 	handleReactions(message);
-	checkMessageTime(message);
-	handleSpam(message);
+	spam.checkMessageTime(message);
+	spam.handleSpam(message, bot);
 	if (message.content === 'y' || message.content === 'n')
 		checkConfirm(message);
 	else if (message.author.id !== bot.user.id)
@@ -608,7 +424,7 @@ bot.on('guildMemberRemove', member => {
 		member.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
-setInterval(checkSpam, 60000);
+setInterval(spam.checkSpam(bot), 60000);
 setInterval(checkReminder, 60000);
 setInterval(checkYouKnowWho, 10000);
 bot.login(config.token);
