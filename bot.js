@@ -130,7 +130,7 @@ function checkYouKnowWho() {
 bot.on("message", message => {
 	handleReactions(message);
 	spam.checkMessageTime(message);
-	admcmds.chekNigger(message);
+	admcmds.checkNigger(message);
 	spam.handleSpam(message, bot);
 	if (message.content === 'y' || message.content === 'n')
 		admcmds.checkConfirm(message);
