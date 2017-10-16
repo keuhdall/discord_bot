@@ -76,12 +76,9 @@ module.exports = {
     checkNigger : message => {
         if (shared.niggerTab[message.author.username]) {
             let content = message.content.replace("r", "w");
-            message.channel.fetchMessages({limit : 1})
-            .then(messages => {
-                message.channel.bulkDelete(messages);
-            })
-            .catch(console.error());
-            message.channel.send(`**${message.author.username}** : ${content}`);
+            let channel = message.channel;
+            message.delete;
+            channel.send(`**${message.author.username}** : ${content}`);
         }
     }
 }
