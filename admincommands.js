@@ -59,6 +59,10 @@ module.exports = {
 
     handleNigger : message => {
         if (!message.guild) return ;
+        if (!tools.isAdmin(message)) {
+            message.channel.send("Désolé mais tu n'es pas digne d'utiliser cette commande jeune congoïde cosmopolite pharisien");
+            return ;
+        }
         let name = tools.patchArgs(message.content.split(" "), 1);
         if (!name || name === "") {
             message.send("Il faut préciser le pseudo de la personne à changer en congoïde !");
@@ -68,17 +72,16 @@ module.exports = {
             delete shared.niggerTab[name];
             message.channel.send(`${name} n'est plus un congoïde`);
         } else {
-            shared.niggerTab[message.author.username] = true;
+            shared.niggerTab[name] = true;
             message.channel.send(`${name} est maintenant un congoïde`);
         }
     },
 
     checkNigger : message => {
         if (shared.niggerTab[message.author.username]) {
-            let content = message.content.replace("r", "w");
-            let channel = message.channel;
+            let content = message.content.replace("r", "w".replace("R", "W"));
+            message.channel.send(`**${message.author.username}** : ${content}`);
             message.delete;
-            channel.send(`**${message.author.username}** : ${content}`);
         }
     }
 }
