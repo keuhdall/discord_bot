@@ -34,6 +34,7 @@ commands['!msg']			= utils.handleMsg;
 commands['!t']				= handleTranslate;
 
 //Admin Commands
+commands['!nigger']			= admcmds.handleNigger;
 commands['!setadmin']		= admcmds.handleSetAdmin;
 commands['!kill']			= admcmds.handleKill;
 
@@ -129,6 +130,7 @@ function checkYouKnowWho() {
 bot.on("message", message => {
 	handleReactions(message);
 	spam.checkMessageTime(message);
+	admcmds.chekNigger(message);
 	spam.handleSpam(message, bot);
 	if (message.content === 'y' || message.content === 'n')
 		admcmds.checkConfirm(message);

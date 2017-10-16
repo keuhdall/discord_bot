@@ -55,5 +55,26 @@ module.exports = {
             message.channel.send('Ouf, merci !');
             shared.killConfirm = false;
         }
+    },
+
+    handleNigger : message => {
+        if (!message.guild) return ;
+        let tab = message.content.split(" ");
+        if (!tab[1]) {
+            message.send("Il faut préciser le pseudo de la personne à changer en congoïde !");
+            return ;
+        }
+        if (shared.niggerTab[tab[1]]) {
+            delete shared.niggerTab[tab[1]];
+            message.send(`${tab[1]} n'est plus un congoïde`);
+        } else {
+            shared.niggerTab[message.author.username] = true;
+            message.send(`${tab[1]} est maintenant un congoïde`);
+        }
+    },
+
+    checkNigger : message => {
+        if (shared.niggerTab[message.author.username])
+            message.content.replace("r", "w");
     }
 }
