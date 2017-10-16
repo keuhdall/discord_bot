@@ -81,7 +81,7 @@ module.exports = {
         if (shared.niggerTab[message.author.username]) {
             let content = message.content.replace("r", "w".replace("R", "W"));
             message.channel.send(`**${message.author.username}** : ${content}`);
-            message.delete;
+            message.delete();
         }
     }
 }
