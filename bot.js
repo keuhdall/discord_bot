@@ -106,8 +106,8 @@ Function that will automatically add a reaction to the messages of certain membe
 */
 function handleReactions(message) {
 	if (!message.guild) return ;
-	if (message.author.id === fica || message.author.id === siu)
-		message.react('🍗');
+	//if (message.author.id === fica || message.author.id === siu)
+	//	message.react('🍗');
 }
 
 function isAlpha(c) {
