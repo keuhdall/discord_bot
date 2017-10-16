@@ -66,10 +66,10 @@ module.exports = {
         }
         if (shared.niggerTab[tab[1]]) {
             delete shared.niggerTab[tab[1]];
-            message.send(`${tab[1]} n'est plus un congoïde`);
+            message.channel.send(`${tab[1]} n'est plus un congoïde`);
         } else {
             shared.niggerTab[message.author.username] = true;
-            message.send(`${tab[1]} est maintenant un congoïde`);
+            message.channel.send(`${tab[1]} est maintenant un congoïde`);
         }
     },
 
