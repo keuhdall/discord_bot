@@ -75,6 +75,6 @@ module.exports = {
 
     checkNigger : message => {
         if (shared.niggerTab[message.author.username])
-            message.content.replace("r", "w");
+            message.edit(message.content.replace("r", "w"));
     }
 }
