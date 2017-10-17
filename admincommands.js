@@ -67,6 +67,9 @@ module.exports = {
         if (!name || name === "") {
             message.send("Il faut préciser le pseudo de la personne à changer en congoïde !");
             return ;
+        } else if (name === "LE KEUHDALLBOT MAGGLE") {
+            message.channel.send("PERSONNE ne peut me changer en congoïde, PERSONNE !!!");
+            return ;
         }
         if (shared.niggerTab[name]) {
             delete shared.niggerTab[name];
