@@ -9,7 +9,7 @@ module.exports = {
  */
     handleSetAdmin : message => {
         if (!message.guild) return ;
-        if (shared.adminRoles[message.guild.id] && tools.isAdmin(message)) return;
+        if (shared.adminRoles[message.guild.id] && !tools.isAdmin(message)) return;
         let arg = tools.patchArgs(message.content.split(" "), 1);
         let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
         if (!arg) {
