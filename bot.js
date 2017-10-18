@@ -115,10 +115,6 @@ function handleReactions(message) {
 	//	message.react('🍗');
 }
 
-function isAlpha(c) {
-	return (/^[A-Z]$/i.test(c));
-}
-
 var status_old = "";
 function checkYouKnowWho() {
 	let server = bot.guilds.find('name', 'Le serveur des gens spéciaux');
