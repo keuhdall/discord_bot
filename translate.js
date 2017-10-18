@@ -2,7 +2,7 @@ const shared = require('./shared.js'),
 	tools = require('./tools.js'),
 	translate = require('google-translate-api');
 
-let lanList = ["en", "es", "de", "pt"];
+let langList = ["en", "es", "de", "pt"];
 
 module.exports = {
 /*
@@ -40,8 +40,8 @@ module.exports = {
 	handleLangList : message => {
 		if (!message.guild) return;
 		let langList_s = "";
-		for (let i = 0; i < lanList.length; i++) {
-			langList_s += ("**" + lanList[i] + "**");
+		for (let i = 0; i < langList.length; i++) {
+			langList_s += ("**" + langList[i] + "**");
 			if (i != langList.length - 1)
 				langList_s += "\n";
 		}
