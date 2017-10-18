@@ -42,6 +42,10 @@ Function that check if the user that issued a message is admin or not.
         return (newTime);
     },
 
+    isAlpha : c => {
+        return (/^[A-Z]$/i.test(c));
+    },
+
     patchArgs : (args, index) => {
         let str = "";
         for (let i = index; i < args.length; i++) {
