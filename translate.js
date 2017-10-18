@@ -2,13 +2,13 @@ const shared = require('./shared.js'),
 	tools = require('./tools.js'),
 	translate = require('google-translate-api');
 
-let lanList = ["en"];
+let lanList = ["en", "es", "de", "pt"];
 
 module.exports = {
-	/*
-	 Function that will translate a sentence from a language to another.
-	 Command : !t [lang] [content to translate] 
-	 */
+/*
+ Function that will translate a sentence from a language to another.
+ Command : !t [lang] [content to translate] 
+ */
 	handleTranslate : message => {
 		if (!message.guild) return;
 		let tab = message.content.split(" ");
@@ -33,11 +33,15 @@ module.exports = {
 		});
 	},
 
+/*
+ Function that displays the languages supported by the bot.
+ Command : !langlist
+ */
 	handleLangList : message => {
 		if (!message.guild) return;
 		let langList_s = "";
 		for (let i = 0; i < lanList.length; i++) {
-			langList_s += lanList[i];
+			langList_s += ("**" + lanList[i] + "**");
 			if (i != langList.length - 1)
 				langList_s += "\n";
 		}

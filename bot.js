@@ -32,6 +32,7 @@ commands['!msg']			= utils.handleMsg;
 
 //Translation commands
 commands['!t']				= translate.handleTranslate;
+commands['!langlist']		= translate.handleLangList;
 
 //Admin Commands
 commands['!nigger']			= admcmds.handleNigger;
