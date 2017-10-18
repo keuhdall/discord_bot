@@ -103,6 +103,10 @@ Command : !cat
         });
     },
 
+/*
+ Function that will print a random "inspiring" quote
+ Command : !quote
+ */
     handleQuote : message => {
         if (!message.guild) return;
         //let quote_url = "http://quotesondesign.com/api/3.0/api-3.0.json";
@@ -119,6 +123,10 @@ Command : !cat
         });
     },
 
+/*
+ Function that will display informations on an Anime or MyAnimeList profile using the MyAnimeList API
+ Command : !mal [anime] OR !mal profile [profile] 
+ */
     handleMal : (message, bot) => {
         if (!message.guild) return;
         let mal_url;

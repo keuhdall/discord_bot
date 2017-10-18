@@ -81,6 +81,10 @@ function handleMember(message) {
 	})
 }
 
+/*
+ Function that will translate a sentence from a language to another.
+ Command : !t [lang] [content to translate] 
+ */
 function handleTranslate(message) {
 	if (!message.guild) return;
 	let tab = message.content.split(" ");

@@ -37,8 +37,12 @@ Command : !help
     - **!clean** **[**_-c -t_**]** : permet de clean les derniers messages du channel courant. -c = count -t = time
     - **!roll** **[**_nombre de lancés_**]**d**[**_taille du dé_**]** : permet de simuler un lancé de dés
     - **!reminder** **[**_heure_**]** **[**_message_**]** : envoie un rappel contenant le message donné à l'heure donnée
+    - **!ub** **[**_keywords_**]** : lance une recherche Urban Dictionnary
     - **!git** **[**_username_**]** : affiche le profil github d'un utilisateur donné
     - **!cat** : affiche une image de chat trop mignon choisi au hasard
+    - **!quote** : affiche une citation au hasard
+    - **!mal** **[**_anime_**]** : affiche des informations sur un anime
+    - **!mal profile** **[**_profil_**]** : affiche des informations sur un profil MyAnimeList
     - **!join** : invite le bot dans votre channel vocal
     - **!leave** : fait quitter le channel au bot
     - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal

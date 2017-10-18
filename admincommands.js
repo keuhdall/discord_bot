@@ -57,6 +57,10 @@ module.exports = {
         }
     },
 
+/*
+ Function that will replace all "r"s by "w"s (just for fun)
+ Command : !nigger [username]
+ */
     handleNigger : message => {
         if (!message.guild) return ;
         if (!tools.isAdmin(message)) {

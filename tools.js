@@ -27,6 +27,9 @@ Function that check if the user that issued a message is admin or not.
         return ((countUppercase / content.length) * 100);
     },
 
+/*
+ Function that takes a timestamp as parameter and returns an object comtaining the hours, minutes and seconds of that timestamp
+ */
     getTimeFormat : time => {
         let newTime = new Object;
         newTime.hours = time / 3600;

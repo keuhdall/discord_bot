@@ -35,8 +35,8 @@ let = sendMusicEmbed = (message, music, bot) => {
 
 module.exports = {
 /*
-Function that makes the bot join your voice channel
-Command : !join
+ Function that makes the bot join your voice channel
+ Command : !join
 */
     handleJoin : message => {
         if (!message.guild) return ;
@@ -53,8 +53,8 @@ Command : !join
     },
 
 /*
-const Function that makes the bor play a song provided through a youtube link
-Command : !play [link]
+ Function that makes the bor play a song provided through a youtube link
+ Command : !play [link]
 */
     handlePlay : (message, bot) => {
         let tmp = queue[0] ? true : false;
@@ -97,8 +97,8 @@ Command : !play [link]
     },
 
 /*
-Function that makes the bot leave the voice channel he is currently in
-Command : !leave
+ Function that makes the bot leave the voice channel he is currently in
+ Command : !leave
 */
     handleLeave : message => {
         if (!botVoiceChannel)
@@ -110,11 +110,19 @@ Command : !leave
         }
     },
 
+/*
+ Function that returns the music currently in the queue 
+ Command : !list
+ */
     handleList : message => {
         let titles = queue.map((a) => {return a.title;});
         message.channel.send(`Il y a actuellement ${queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
     },
 
+/*
+ Function that skip the current playing song 
+ Command : !skip
+ */
     handleSkip : message => {
         if (queue[0] && dispatcher) {
             dispatcher.end();
