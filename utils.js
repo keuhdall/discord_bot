@@ -41,7 +41,8 @@ Command : !help
     - **!cat** : affiche une image de chat trop mignon choisi au hasard
     - **!join** : invite le bot dans votre channel vocal
     - **!leave** : fait quitter le channel au bot
-    - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal`;
+    - **!play** **[**_lien youtube_**]** : fait jouer une musique au bot s\'il est dans un channel vocal
+    - **!adminlist** : affiche la liste des roles pouvant utiliser les commandes admin du bot`;
 
         message.channel.send(cmdHelp);
         if (tools.isAdmin(message)) {
@@ -49,7 +50,9 @@ Command : !help
     - **!spamlevel** : permet de fixer le niveau de spam du serveur [0-3]
     - **!spamtime** : permet de fixer le temps dans le groupe spammeur
     - **!msginterval** : permet de fixer le temps minimum entre 2 messages (en ms ; uniquement actif pour un spamlevel >= 2)
-    - **!kill** : kill le bot`);
+    - **!kill** : kill le bot
+    - **!setadmin** **[**_role_**]** : permet à un role d'utiliser les commandes admins du bot
+    - **!nigger** **[**_nickname_**]** : transforme une personne en congoïde`);
         }
     },
 
