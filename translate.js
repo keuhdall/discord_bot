@@ -2,7 +2,11 @@ const shared = require('./shared.js'),
 	tools = require('./tools.js'),
 	translate = require('google-translate-api');
 
-let langList = ["en", "es", "de", "pt"];
+let langList = [];
+langList["en"] = "english";
+langList["es"] = "spanish";
+langList["de"] = "german";
+langList["pt"] = "portuguese";
 
 module.exports = {
 /*
@@ -40,11 +44,13 @@ module.exports = {
 	handleLangList : message => {
 		if (!message.guild) return;
 		let langList_s = "";
-		for (let i = 0; i < langList.length; i++) {
-			langList_s += ("**" + langList[i] + "**");
-			if (i != langList.length - 1)
+		let count = 0;
+		langList.forEach((elt, index) => {
+			langList_s += (elt + "(" + index + ")");
+			if (count != langList.length - 1)
 				langList_s += "\n";
-		}
+			count++;
+		});
 		message.channel.send(`Les langues supportées sont les suivantes :
 		${langList_s}`);
 	}
