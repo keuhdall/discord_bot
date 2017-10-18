@@ -7,7 +7,7 @@ const config = require('./config.js');
 	spam = require('./spam.js'),
 	music = require('./music.js'),
 	apis = require('./apis.js'),
-	translate = require('google-translate-api'),
+	translate = require('./translate.js'),
 	fs = require('fs'),
 	bot = new Discord.Client(),
 	fica = '166226448598695936',
@@ -31,7 +31,7 @@ commands['!clean']			= utils.handleClean;
 commands['!msg']			= utils.handleMsg;
 
 //Translation commands
-commands['!t']				= handleTranslate;
+commands['!t']				= translate.handleTranslate;
 
 //Admin Commands
 commands['!nigger']			= admcmds.handleNigger;
@@ -79,31 +79,6 @@ function handleMember(message) {
 		if (message.author.id === keuhdall)
 			member.setRoles(fairRole);
 	})
-}
-
-/*
- Function that will translate a sentence from a language to another.
- Command : !t [lang] [content to translate] 
- */
-function handleTranslate(message) {
-	if (!message.guild) return;
-	let tab = message.content.split(" ");
-	if (!tab[1] || !tab[2]) {
-		message.channel.send("Erreur de syntaxe");
-		return;
-	}
-	let lang = tab[1].toLowerCase();
-	let content = tools.patchArgs(tab, 2);
-	switch (lang) {
-		case "en" : return doTranslate(lang, content, message);
-		default : return message.channel.send("Désolé, mais je ne gère pas cette langue :/");
-	}
-}
-
-function doTranslate(lang, content, message) {
-	translate(content, {to : lang}).then(res => {
-		message.channel.send(`**${message.author.username}** : ${res.text}`);
-	});
 }
 
 /*
