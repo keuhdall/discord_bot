@@ -1,7 +1,7 @@
 const shared = require('./shared.js'),
     tools = require('./tools.js');
 
-let reminder_tab = new Array();
+let reminder_tab = [];
 
 module.exports = {
 /*
@@ -173,7 +173,7 @@ Options : -c -t (-t not implented yet)
                 .then(messages => {
                     console.log('passe');
                     process.exit(1);
-                    let tmpArray = new Array();
+                    let tmpArray = [];
                     tmpArray = messages.array();
                     console.log('length : ' + tmpArray.length);
                     tmpFetchMsg = tmpArray[tmpArray.length - 1];

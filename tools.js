@@ -4,7 +4,7 @@ module.exports = {
 /*
 Function that check if the user that issued a message is admin or not.
 */
-    isAdmin : (message) => {
+    isAdmin : message => {
         if (!message.guild) return;
         if (!shared.adminRoles[message.guild.id])
             return false;
@@ -31,7 +31,7 @@ Function that check if the user that issued a message is admin or not.
  Function that takes a timestamp as parameter and returns an object comtaining the hours, minutes and seconds of that timestamp
  */
     getTimeFormat : time => {
-        let newTime = new Object;
+        let newTime = {};
         newTime.hours = time / 3600;
         newTime.hours = Math.trunc(newTime.hours);
         newTime.minutes = time / 60;

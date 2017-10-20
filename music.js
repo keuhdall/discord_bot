@@ -10,8 +10,8 @@ let botVoiceChannel = null,
 
 let dispatcher;
 
-let = sendMusicEmbed = (message, music, bot) => {
-    let time = new Object();
+let sendMusicEmbed = (message, music, bot) => {
+    let time = {};
     time = tools.getTimeFormat(music.duration);
     message.channel.send('', {embed : {
         color: 65399,
@@ -59,7 +59,7 @@ module.exports = {
     handlePlay : (message, bot) => {
         let tmp = queue[0] ? true : false;
         let tab = message.content.split(' ');
-        let music = new Object();
+        let music = {};
         if (!tab[1]) {
             message.channel.send('Il faut me passer un lien youtube !');
             return ;

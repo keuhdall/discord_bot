@@ -100,7 +100,7 @@ Command : !msginterval [interval] (optionnal)
         if (message.author.id === bot.user.id || tools.isAdmin(message)) return ;
         message.channel.fetchMessages({limit : 4})
         .then(messages => {
-            let spamRole = Array();
+            let spamRole = {};
             spamRole.push(message.guild.roles.find('name', 'Spammeur'));
             let msg = messages.array();
             let same = true;
