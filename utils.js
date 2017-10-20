@@ -71,33 +71,29 @@ Command : !help
     handleReminder : message => {
         let tab = message.content.split(" ");
         let reminder_obj = new Object();
-        if (message.guild) {
-            if (tab[1]) {
-                if (tab[2]) {
-                    let tab_time = tab[1].split(":");
-                    if (!tab_time[0] || !tab_time[1] || isNaN(tab_time[0]) || isNaN(tab_time[1]) || tab_time[0] < 0 || tab_time[0] > 23 || tab_time[1] < 0 || tab_time[1] > 59) {
-                        message.channel.send("Erreur : la date est mal formatée !");
-                        return;
-                    } else {
-                        let content = tools.patchArgs(message.content.split(" "), 2);
-                        if (content !== "") {
-                            reminder_obj.message = message;
-                            reminder_obj.hours = tab_time[0];
-                            reminder_obj.minutes = tab_time[1];
-                            reminder_obj.content = content;
-                            reminder_tab.push(reminder_obj);
-                            message.channel.send(`Ok ! je t'enverrai une notification à ${reminder_obj.hours}:${reminder_obj.minutes} avec le contenu suivant : ${reminder_obj.content}`);
-                        } else {
-                            message.channel.send("Erreur : pas de contenu, ou alors le contenu est mal formaté (gros boulet)");
-                            return;
-                        }
-                    }
-                } else {
-                    message.channel.send("Erreur : pas de message précisé");
-                    return;
-                }
+        if (!message.guild) return ;
+        if (!tab[1]) {
+            message.channel.send("Erreur : il n'y a pas de d'heure de précisé !");
+            return;
+        } else if (!tab[2]) {
+            message.channel.send("Erreur : pas de message précisé");
+            return;
+        }
+        let tab_time = tab[1].split(":");
+        if (!tab_time[0] || !tab_time[1] || isNaN(tab_time[0]) || isNaN(tab_time[1]) || tab_time[0] < 0 || tab_time[0] > 23 || tab_time[1] < 0 || tab_time[1] > 59) {
+            message.channel.send("Erreur : la date est mal formatée !");
+            return;
+        } else {
+            let content = tools.patchArgs(tab, 2);
+            if (content !== "") {
+                reminder_obj.message = message;
+                reminder_obj.hours = tab_time[0];
+                reminder_obj.minutes = tab_time[1];
+                reminder_obj.content = content;
+                reminder_tab.push(reminder_obj);
+                message.channel.send(`Ok ! je t'enverrai une notification à ${reminder_obj.hours}:${reminder_obj.minutes} avec le contenu suivant : ${reminder_obj.content}`);
             } else {
-                message.channel.send("Erreur : il n'y a pas de d'heure de précisé !");
+                message.channel.send("Erreur : pas de contenu, ou alors le contenu est mal formaté (gros boulet)");
                 return;
             }
         }
