@@ -1,11 +1,11 @@
 const tools = require('./tools.js');
 
-var spamMembers = [],
+let spamMembers = [],
     spamRoleTime = 15,
     spamLevel = 0,
     msgInterval = 1000;
 
-var tmpMsg,
+let tmpMsg,
 	isSpam;
 
 module.exports = {

@@ -5,7 +5,7 @@ const config = require('./config.js'),
     S = require('string'),
     striptags = require('striptags');
 
-var tmp_json = "";
+let tmp_json = "";
 
 module.exports = {
 /*

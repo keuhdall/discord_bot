@@ -1,7 +1,7 @@
 const shared = require('./shared.js'),
     tools = require('./tools.js');
 
-var reminder_tab = new Array();
+let reminder_tab = new Array();
 
 module.exports = {
 /*

@@ -4,11 +4,11 @@ const tools = require('./tools.js'),
     ytdl = require('ytdl-core'),
     streamOptions = { seek: 0, volume: 1 };
 
-var botVoiceChannel = null,
+let botVoiceChannel = null,
     botConnection = null,
     queue = [];
 
-var dispatcher;
+let dispatcher;
 
 let = sendMusicEmbed = (message, music, bot) => {
     let time = new Object();

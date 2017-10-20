@@ -3,10 +3,10 @@ const shared = require('./shared.js'),
 	translate = require('google-translate-api');
 
 let langList = [];
-langList["en"] = "english";
-langList["es"] = "spanish";
-langList["de"] = "german";
-langList["pt"] = "portuguese";
+langList['en'] = "english";
+langList['es'] = "spanish";
+langList['de'] = "german";
+langList['pt'] = "portuguese";
 
 module.exports = {
 /*
@@ -45,7 +45,7 @@ module.exports = {
 		if (!message.guild) return;
 		let langList_s = "";
 		let count = 0;
-		langList.forEach((elt, index, array) => {
+		langList.forEach((elt, index) => {
 			langList_s += (elt + "(" + index + ")");
 			if (count != langList.length - 1)
 				langList_s += "\n";
