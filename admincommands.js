@@ -24,6 +24,8 @@ module.exports = {
         }
         if (!shared.adminRoles[message.guild.id])
             shared.adminRoles[message.guild.id] = {};
+        if (!shared.adminRoles[message.guild.id].roles)
+            shared.adminRoles[message.guild.id].roles = [];
         shared.adminRoles[message.guild.id].roles.push(role);
         let roleNames = "";
         for (let i = 0; i < shared.adminRoles[message.guild.id].roles.length; i++) {
