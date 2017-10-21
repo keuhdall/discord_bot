@@ -1,6 +1,22 @@
 const shared = require('./shared.js');
 
 module.exports = {
+    getRoles : id => {
+        for (let i = 0; i < shared.adminRoles.length; i++) {
+            if (shared.adminRoles[i].id === id)
+                return shared.adminRoles[i].roles;
+        }
+        return null;
+    },
+
+    getIndex : id => {
+        for (let i = 0; i < shared.adminRoles.length; i++) {
+            if (shared.adminRoles[i].id === id)
+                return i;
+        }
+        return -1;
+    },
+
 /*
 Function that check if the user that issued a message is admin or not.
 */

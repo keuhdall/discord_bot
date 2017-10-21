@@ -10,9 +10,8 @@ module.exports = {
  */
     handleSetAdmin : message => {
         if (!message.guild) return ;
-        if (shared.adminRoles[message.guild.id] &&
-            shared.adminRoles[message.guild.id].roles &&
-            !tools.isAdmin(message)) return;
+        if (tools.getIndex(message.guild.id) !== -1 &&
+            !tools.isAdmin(message)) return ;
         let arg = tools.patchArgs(message.content.split(" "), 1);
         let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
         if (!arg) {
@@ -22,15 +21,25 @@ module.exports = {
             message.channel.send(`Erreur : ce rôle n'éxiste pas fdp`);
             return ;
         }
-        if (!shared.adminRoles[message.guild.id])
-            shared.adminRoles[message.guild.id] = {};
-        if (!shared.adminRoles[message.guild.id].roles)
-            shared.adminRoles[message.guild.id].roles = [];
-        shared.adminRoles[message.guild.id].roles.push(role);
-        let roleNames = "";
-        for (let i = 0; i < shared.adminRoles[message.guild.id].roles.length; i++) {
-            roleNames += shared.adminRoles[message.guild.id].roles[i].name;
-            if (i < shared.adminRoles[message.guild.id].roles.length - 1)
+        if (tools.getIndex(message.guild.id) === -1) {
+            shared.adminRoles.push({
+                id: message.guild.id,
+                roles: [role]
+            });
+        } else {
+            let curr_roles = tools.getRoles(message.guild.id);
+            curr_roles.push(role);
+            shared.adminRoles[tools.getIndex(message.guild.id)] = {
+                id : message.guild.id,
+                roles: curr_roles
+            }
+        }
+        let roleNames = "",
+            index = tools.getIndex(message.guild.id);
+        if (index === -1) return;
+        for (let i = 0; i < shared.adminRoles[index].roles.length; i++) {
+            roleNames += shared.adminRoles[index].roles[i].name;
+            if (i < shared.adminRoles[index].roles.length - 1)
                 roleNames += " ; ";
         }
         fs.writeFileSync('./adminlist.json', JSON.stringify(shared.adminRoles));
