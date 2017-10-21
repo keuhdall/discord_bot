@@ -22,10 +22,11 @@ Function that check if the user that issued a message is admin or not.
 */
     isAdmin : message => {
         if (!message.guild) return;
-        if (!shared.adminRoles[message.guild.id])
+        let index = tools.getIndex(message.guild.id);
+        if (index === -1)
             return false;
-        for (let i = 0; i < shared.adminRoles[message.guild.id].length; ++i) {
-            if (message.member.roles.has(shared.adminRoles[message.guild.id][i].id))
+        for (let i = 0; i < shared.adminRoles[index].roles.length; ++i) {
+            if (message.member.roles.has(shared.adminRoles[index].roles[i].id))
                 return true;
         }
         return false;
