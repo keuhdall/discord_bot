@@ -14,7 +14,7 @@ const config = require('./config.js');
 	siu = '296175225517768705',
 	keuhdall = '100335365998538752';
 
-let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
+//let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
 let commands = [];
 
 //Miscelanous commands
