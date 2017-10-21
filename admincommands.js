@@ -33,7 +33,7 @@ module.exports = {
             if (i < shared.adminRoles[message.guild.id].roles.length - 1)
                 roleNames += " ; ";
         }
-        fs.writeFileSync('./adminRolesFile.json', JSON.stringify(shared.adminRoles));
+        fs.writeFileSync('./adminlist.json', JSON.stringify(shared.adminRoles));
         message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
     },
 
