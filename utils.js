@@ -16,7 +16,7 @@ module.exports = {
         } else {
         let roleNames = "";
         let index = tools.getIndex(message.guild.id);
-            for (let i = 0; i < shared.adminRoles[index].length; i++) {
+            for (let i = 0; i < shared.adminRoles[index].roles.length; i++) {
                 roleNames += shared.adminRoles[index].roles[i].name;
                 if (i < shared.adminRoles[index].roles.length - 1)
                     roleNames += " ; ";
