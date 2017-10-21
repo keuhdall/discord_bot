@@ -1,5 +1,6 @@
 const shared = require('./shared.js'),
-    tools = require('./tools.js');
+    tools = require('./tools.js'),
+    fs = require('fs');
 
 module.exports = {
 /*
@@ -9,7 +10,9 @@ module.exports = {
  */
     handleSetAdmin : message => {
         if (!message.guild) return ;
-        if (shared.adminRoles[message.guild.id] && !tools.isAdmin(message)) return;
+        if (shared.adminRoles[message.guild.id] &&
+            shared.adminRoles[message.guild.id].roles &&
+            !tools.isAdmin(message)) return;
         let arg = tools.patchArgs(message.content.split(" "), 1);
         let role = arg !== "" ? message.guild.roles.find('name', arg) : null;
         if (!arg) {
@@ -20,17 +23,18 @@ module.exports = {
             return ;
         }
         if (!shared.adminRoles[message.guild.id])
-            shared.adminRoles[message.guild.id] = [];
-        shared.adminRoles[message.guild.id].push(role);
+            shared.adminRoles[message.guild.id] = {};
+        shared.adminRoles[message.guild.id].roles.push(role);
         let roleNames = "";
-        for (let i = 0; i < shared.adminRoles[message.guild.id].length; i++) {
-            roleNames += shared.adminRoles[message.guild.id][i].name;
-            if (i < shared.adminRoles[message.guild.id].length - 1)
+        for (let i = 0; i < shared.adminRoles[message.guild.id].roles.length; i++) {
+            roleNames += shared.adminRoles[message.guild.id].roles[i].name;
+            if (i < shared.adminRoles[message.guild.id].roles.length - 1)
                 roleNames += " ; ";
         }
-        //fs.writeFile('./adminRolesFile.json', JSON.stringify(shared.adminRoles));
+        fs.writeFileSync('./adminRolesFile.json', JSON.stringify(shared.adminRoles));
         message.channel.send(`le role ${arg} a été ajouté, les roles admins sont : ${roleNames}`);
     },
+
 /*
  Function that will kill the bot. It'll have to be restarted through node.
  Command : !kill
