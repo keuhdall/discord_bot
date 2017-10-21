@@ -10,7 +10,7 @@ module.exports = {
 */
     handleAdminList : message => {
         if (!message.guild) return ;
-        if (shared.adminRoles[tools.getIndex(message.guild.id) === -1]) {
+        if (shared.adminRoles[tools.getIndex(message.guild.id)] === -1) {
             message.channel.send("Il n'y a pas encore de role pouvant administer le bot, vous pouvez en ajouter en utilisant la commande !setadmin [role]");
             return ;
         } else {
