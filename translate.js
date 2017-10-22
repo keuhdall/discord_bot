@@ -45,12 +45,12 @@ module.exports = {
 		if (!message.guild) return;
 		let langList_s = "";
 		let count = 0;
-		langList.forEach((elt, index, arr) => {
-			langList_s += (elt + "(" + index + ")");
+		for (key in langList) {
+			langList_s += (langList[key] + "(" + key + ")");
 			if (count != langList.length - 1)
 				langList_s += "\n";
 			count++;
-		});
+		}
 		message.channel.send(`Les langues supportées sont les suivantes :
 		${langList_s}`);
 	}
