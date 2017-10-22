@@ -3,10 +3,10 @@ const shared = require('./shared.js'),
 	translate = require('google-translate-api');
 
 let langList = [];
-langList['en'] = "english";
-langList['es'] = "spanish";
-langList['de'] = "german";
-langList['pt'] = "portuguese";
+langList['en'] = "English";
+langList['es'] = "Spanish";
+langList['de'] = "German";
+langList['pt'] = "Portuguese";
 
 module.exports = {
 /*
@@ -46,12 +46,12 @@ module.exports = {
 		let langList_s = "";
 		let count = 0;
 		for (key in langList) {
-			langList_s += (langList[key] + "(" + key + ")");
+			langList_s += ("- " + langList[key] + " (**" + key + "**)");
 			if (count != langList.length - 1)
 				langList_s += "\n";
 			count++;
 		}
 		message.channel.send(`Les langues supportées sont les suivantes :
-		${langList_s}`);
+${langList_s}`);
 	}
 }
