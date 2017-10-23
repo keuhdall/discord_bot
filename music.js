@@ -83,19 +83,19 @@ module.exports = {
                 dispatcher = botConnection.playStream(stream, streamOptions);
             }
             queue.push(music);
+			dispatcher.on('end', (end) => {
+				console.log(end);
+				queue.shift();
+			    if (queue[0]) {
+			        sendMusicEmbed(message, queue[0], bot);
+			        stream = ytdl(queue[0].url, {filter : 'audioonly'});
+			        dispatcher = botConnection.playStream(stream, streamOptions);
+			    }
+			});
         }
         message.delete();
     },
 
-    dispatcher:on('end', (end) => {
-        console.log(end);
-        queue.shift();
-        if (queue[0]) {
-            sendMusicEmbed(message, queue[0], bot);
-            stream = ytdl(queue[0].url, {filter : 'audioonly'});
-            dispatcher = botConnection.playStream(stream, streamOptions);
-        }
-    }),
 
 /*
  Function that makes the bot leave the voice channel he is currently in
