@@ -28,7 +28,7 @@ commands['!about']			= utils.handleAbout;
 commands['!reminder']		= utils.handleReminder;
 commands['!roll']			= utils.handleRoll;
 commands['!clean']			= utils.handleClean;
-commands['!msg']			= utils.handleMsg;
+//commands['!msg']			= utils.handleMsg;
 
 //Translation commands
 commands['!t']				= translate.handleTranslate;
