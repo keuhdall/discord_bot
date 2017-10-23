@@ -16,7 +16,7 @@ Command : !ub ["your keywords here"]
         if (!message.guild) return;
         let tab = message.content.split("\"");
         if (!tab[1]) {
-            message.guild.send("Erreur de syntaxe");
+            message.channel.send("Erreur de syntaxe");
             return;
         }
         let ub_url = "http://api.urbandictionary.com/v0/define?term=" + tab[1];
