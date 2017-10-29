@@ -57,6 +57,7 @@ commands['!git']			= apis.handleGit;
 commands['!cat']			= apis.handleCat;
 commands['!quote']			= apis.handleQuote;
 commands['!mal']			= apis.handleMal;
+commands['!poll']			= apis.handlePoll;
 
 function handleSiou(message) {
 	let str = tools.patchArgs(message.content.split(" "), 1);

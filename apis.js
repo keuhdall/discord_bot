@@ -211,5 +211,48 @@ Command : !cat
                 }
             });
         });
+    },
+
+    formatPoll : str => {
+        poll_obj = {};
+        let tab = str.split(";");
+        if (str.length < 3) return null;
+        let tab2 = tab[0].split(" ");
+        if (tab2.length < 2) return null;
+        poll_obj.question = tab2[0].slice(1).trim();
+        poll_obj.answers = [];
+        for (i in tab) {
+            if (i !== 0)
+                poll_obj.answers.push(tab[i].trim());
+        }
+        return poll_obj;
+    },
+
+    handlePoll : message => {
+        if (!message.guild) return;
+        let poll = formatPoll(message.content);
+        if (!poll) {
+            message.channel.send("Erreur de syntaxe dans le sondage");
+            return;
+        }
+        request.post("https://strawpoll.me/api/v2/polls", {
+            form: {
+                "title": poll.question,
+                "options": poll.answers
+            },
+            "multi": false
+        }, (err, res, body) => {
+            if (err) {
+                console.error(err);
+                return;
+            } else {
+                console.log(res);
+                console.log(body);
+            }
+        });
+        /*
+        request.get("https://strawpoll.me/api/v2/polls").on('data', data_get => {
+            message.channel.send(`<@everyone> ${message.author.username} viens de créer un sondage, allez sur strawpoll.com/${data_get}`)
+        });*/
     }
 }
