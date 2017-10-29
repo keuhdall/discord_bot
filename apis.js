@@ -246,8 +246,9 @@ Command : !cat
                 console.error(err);
                 return;
             } else {
-                console.log(res);
-                console.log(body);
+                console.log("response : " + res);
+                console.log("--------------------------");
+                console.log("body : " + body);
             }
         });
         /*
