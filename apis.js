@@ -7,6 +7,21 @@ const config = require('./config.js'),
 
 let tmp_json = "";
 
+formatPoll : str => {
+    poll_obj = {};
+    let tab = str.split(";");
+    if (str.length < 3) return null;
+    let tab2 = tab[0].split(" ");
+    if (tab2.length < 2) return null;
+    poll_obj.question = tab2[0].slice(1).trim();
+    poll_obj.answers = [];
+    for (i in tab) {
+        if (i !== 0)
+            poll_obj.answers.push(tab[i].trim());
+    }
+    return poll_obj;
+}
+
 module.exports = {
 /*
 Function that will search the given keywords on urbandictionary
@@ -211,21 +226,6 @@ Command : !cat
                 }
             });
         });
-    },
-
-    formatPoll : str => {
-        poll_obj = {};
-        let tab = str.split(";");
-        if (str.length < 3) return null;
-        let tab2 = tab[0].split(" ");
-        if (tab2.length < 2) return null;
-        poll_obj.question = tab2[0].slice(1).trim();
-        poll_obj.answers = [];
-        for (i in tab) {
-            if (i !== 0)
-                poll_obj.answers.push(tab[i].trim());
-        }
-        return poll_obj;
     },
 
     handlePoll : message => {
