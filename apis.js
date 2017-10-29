@@ -29,14 +29,15 @@ Command : !ub ["your keywords here"]
 */
     handleUb : message => {
         if (!message.guild) return;
-        let tab = message.content.split("\"");
+        let tab = message.content.split(" ");
         if (!tab[1]) {
             message.channel.send("Erreur de syntaxe");
             return;
         }
-        let ub_url = "http://api.urbandictionary.com/v0/define?term=" + tab[1];
-        let json_get;
+        let content = tools.patchArgs(tab, 1);
+        let ub_url = "http://api.urbandictionary.com/v0/define?term=" + content.replace(/ /g, '+');
         request.get(ub_url).on('data', data_get => {
+            let json_get;
             try {
                 json_get = JSON.parse(data_get.toString());
             } catch (e) {
@@ -46,7 +47,8 @@ Command : !ub ["your keywords here"]
             if (json_get.list[0])
                 message.channel.send(`pemalink : ${json_get.list[0].permalink}`);
             else
-                message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${tab[1]}"`);
+                message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${content}"`);
+                //message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${tab[1]}"`);
         });
     },
 
@@ -246,9 +248,7 @@ Command : !cat
                 console.error(err);
                 return;
             } else {
-                console.log("response : " + res);
-                console.log("--------------------------");
-                console.log("body : " + body);
+                console.log(res.id);
             }
         });
         /*
