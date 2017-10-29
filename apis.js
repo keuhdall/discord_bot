@@ -7,7 +7,7 @@ const config = require('./config.js'),
 
 let tmp_json = "";
 
-formatPoll : str => {
+let formatPoll = str => {
     poll_obj = {};
     let tab = str.split(";");
     if (str.length < 3) return null;
