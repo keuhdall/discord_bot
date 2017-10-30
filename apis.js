@@ -48,7 +48,6 @@ Command : !ub ["your keywords here"]
                 message.channel.send(`pemalink : ${json_get.list[0].permalink}`);
             else
                 message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${content}"`);
-                //message.channel.send(`Oups ! Je n'ai rien trouvé pour le terme "${tab[1]}"`);
         });
     },
 
@@ -126,7 +125,6 @@ Command : !cat
  */
     handleQuote : message => {
         if (!message.guild) return;
-        //let quote_url = "http://quotesondesign.com/api/3.0/api-3.0.json";
         let quote_url = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1"
         request.get(quote_url).on('data', data_get => {
             let json_get;
