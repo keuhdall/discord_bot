@@ -169,64 +169,68 @@ Command : !cat
             }
         }).on('data', data_get => {
             let parse = xml2js.parseString;
-            parse(data_get.toString(), (err, result) => {
-                if (search_type === 'anime') {
-                    message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
-                        color: 65399,
-                        author: {
-                            name: `BOT ${message.guild.name} :  MyAnimeList assistant`,
-                            icon_url: `${result.anime.entry[0].image}`
-                        },
-                        title: result.anime.entry[0].english ? `${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})` :
-                                                                `${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})`,
-                        url: 'https://myanimelist.net/anime/' + result.anime.entry[0].id,
-                        fields: [{
-                            name: 'Episodes',
-                            value: `${result.anime.entry[0].episodes}`,
-                            inline: true
-                        },{
-                            name: 'Score',
-                            value: `${result.anime.entry[0].score}`,
-                            inline: true
-                        }]
-                    }});
-                } else {
-                    if (!result.myinfo) {
-                        message.channel.send("Erreur : pas de profil trouvé !");
-                        return ;
+            try {
+                parse(data_get.toString(), (err, result) => {
+                    if (search_type === 'anime') {
+                        message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
+                            color: 65399,
+                            author: {
+                                name: `BOT ${message.guild.name} :  MyAnimeList assistant`,
+                                icon_url: `${result.anime.entry[0].image}`
+                            },
+                            title: result.anime.entry[0].english ? `${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})` :
+                                                                    `${result.anime.entry[0].title} (title anglais : ${result.anime.entry[0].english})`,
+                            url: 'https://myanimelist.net/anime/' + result.anime.entry[0].id,
+                            fields: [{
+                                name: 'Episodes',
+                                value: `${result.anime.entry[0].episodes}`,
+                                inline: true
+                            },{
+                                name: 'Score',
+                                value: `${result.anime.entry[0].score}`,
+                                inline: true
+                            }]
+                        }});
+                    } else {
+                        if (!result.myinfo) {
+                            message.channel.send("Erreur : pas de profil trouvé !");
+                            return ;
+                        }
+                        message.channel.send(`Voici le profil de ${result.myinfo.user_name}`, {embed : {
+                            color: 65399,
+                            author: {
+                                name: `BOT ${message.guild.name} : MyAnimeList assistant`,
+                                icon_url: bot.user.avatarURL
+                            },
+                            title: `Profil de : ${result.myinfo.user_name}`,
+                            url: 'https://myanimelist.net/animelist' + result.myinfo.user_name,
+                            fields: [{
+                                name: 'Animes en cours :',
+                                value: `{result.myinfo.user_watching}`,
+                            },{
+                                name: 'Animes terminés :',
+                                value: `${result.myinfo.user_completed}`,
+                                inline: true
+                            },{
+                                name: 'Animes en pause :',
+                                value: `${result.myinfo.user_onhold}`,
+                            },{
+                                name: 'Animes abandonnés :',
+                                value: `${result.myinfo.user_dropped}`,
+                                inline: true
+                            },{
+                                name: 'Animes à regarder :',
+                                value: `${result.myinfo.user_plantowatch}`
+                            },{
+                                name: 'Jours passés à regarder des animes :',
+                                value: `${result.myinfo.user_days_spent_watching}`
+                            }]
+                        }});
                     }
-                    message.channel.send(`Voici le profil de ${result.myinfo.user_name}`, {embed : {
-                        color: 65399,
-                        author: {
-                            name: `BOT ${message.guild.name} : MyAnimeList assistant`,
-                            icon_url: bot.user.avatarURL
-                        },
-                        title: `Profil de : ${result.myinfo.user_name}`,
-                        url: 'https://myanimelist.net/animelist' + result.myinfo.user_name,
-                        fields: [{
-                            name: 'Animes en cours :',
-                            value: `{result.myinfo.user_watching}`,
-                        },{
-                            name: 'Animes terminés :',
-                            value: `${result.myinfo.user_completed}`,
-                            inline: true
-                        },{
-                            name: 'Animes en pause :',
-                            value: `${result.myinfo.user_onhold}`,
-                        },{
-                            name: 'Animes abandonnés :',
-                            value: `${result.myinfo.user_dropped}`,
-                            inline: true
-                        },{
-                            name: 'Animes à regarder :',
-                            value: `${result.myinfo.user_plantowatch}`
-                        },{
-                            name: 'Jours passés à regarder des animes :',
-                            value: `${result.myinfo.user_days_spent_watching}`
-                        }]
-                    }});
-                }
-            });
+                });
+            } catch (e) {
+                console.error(e);
+            }
         });
     },
 
