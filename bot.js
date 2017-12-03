@@ -19,7 +19,7 @@ const config = require('./config.js');
 let commands = [];
 
 //Miscelanous commands
-commands['!siou']			= misc.handleSiou;
+commands['!siu']			= misc.handleSiu;
 commands['!member']			= misc.handleMember;
 
 //Utility commands

@@ -1,7 +1,7 @@
 const shared = require('./shared.js');
 
 module.exports = {
-    handleSiou : message => {
+    handleSiu : message => {
         let str = tools.patchArgs(message.content.split(" "), 1);
         if (!str || str === "") return;
         message.channel.send(`Vous avez quoi contre ${str} ?`);
