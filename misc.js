@@ -10,7 +10,7 @@ module.exports = {
     
     handleWellan : message => {
         let arg = tools.patchArgs(message.content.split(" "), 1);
-        message.channel.send(arg.replace(/ /g, "... " + "..."));
+        message.channel.send(arg.replace(/ /g, "... ") + "...");
     },
 
     /*
