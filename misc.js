@@ -1,4 +1,5 @@
-const shared = require('./shared.js');
+const shared = require('./shared.js'),
+    tools = require('./tools.js');
 
 module.exports = {
     handleSiu : message => {
@@ -8,7 +9,7 @@ module.exports = {
     },
     
     handleWellan : message => {
-        let arg = patchArgs(message.content.split(" "), 1);
+        let arg = tools.patchArgs(message.content.split(" "), 1);
         message.channel.send(arg.replace(/ /g, "... "));
     },
 
