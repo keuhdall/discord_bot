@@ -7,6 +7,11 @@ module.exports = {
         message.channel.send(`Vous avez quoi contre ${str} ?`);
     },
     
+    handleWellan : message => {
+        let arg = patchArgs(message.content.split(" "), 1);
+        message.channel.send(arg.replace(/ /g, "... "));
+    },
+
     /*
      Function that allows me to recover my permissions if i mess to much with the bot
      Command : !member [only works with my ID ; you have to edit the code]
