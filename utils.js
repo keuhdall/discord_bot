@@ -101,9 +101,12 @@ Command : !help
     },
 
     checkReminder : () => {
+        console.log('test');
         let currentTime =  new Date();
         for (let i = 0; i < reminder_tab.length; ++i) {
+            console.log('passe 1');
             if (reminder_tab[i].hours == currentTime.getHours() + 2 && reminder_tab[i].minutes == currentTime.getMinutes()) {
+                console.log('passe 2');
                 reminder_tab[i].message.reply(`Hey, voici ton reminder : ${reminder_tab[i].content}`);
                 reminder_tab.splice(i, 1);
             }
