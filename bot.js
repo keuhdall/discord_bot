@@ -121,6 +121,6 @@ bot.on('guildMemberRemove', member => {
 });
 
 setInterval(() => {spam.checkSpam(bot)}, 60000);
-setInterval(utils.checkReminder, 60000);
+setInterval(utils.checkReminder, 30000);
 setInterval(checkYouKnowWho, 10000);
 bot.login(config.token);
