@@ -2,6 +2,12 @@ const shared = require('./shared.js'),
 	tools = require('./tools.js'),
 	translate = require('google-translate-api');
 
+let doTranslate = (lang, content, message) => {
+	translate(content, { to: lang }).then(res => {
+		message.channel.send(`**${message.author.username}** : ${res.text}`);
+	});
+}
+
 let langList = [];
 langList['en'] = "English";
 langList['es'] = "Spanish";
@@ -29,12 +35,6 @@ module.exports = {
 			case "pt": return doTranslate(lang, content, message);
 			default: return message.channel.send("Désolé, mais je ne gère pas cette langue :/");
 		}
-	},
-
-	doTranslate: (lang, content, message) => {
-		translate(content, { to: lang }).then(res => {
-			message.channel.send(`**${message.author.username}** : ${res.text}`);
-		});
 	},
 
 /*
