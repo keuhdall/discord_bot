@@ -109,7 +109,7 @@ Function that check if the user that issued a message is admin or not.
             console.log('2');
             if (server.queue[0]) {
                 console.log('3');
-                playMusic(connection, message);
+                module.exports.playMusic(connection, message);
             }
         });
     }
