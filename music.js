@@ -6,9 +6,9 @@ let botVoiceChannel = null,
     botConnection = null,
     queue = [];
 
-let dispatcher;
+let dispatcher = new Object();
 
-this.dispatcher.on('end', (end) => {
+dispatcher.on('end', (end) => {
     console.log(end);
     queue.shift();
     if (queue[0]) {
