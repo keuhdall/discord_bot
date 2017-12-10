@@ -105,7 +105,8 @@ Function that check if the user that issued a message is admin or not.
         if (!server.dispatcher)
             server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
         server.dispatcher.on('end', (end) => {
-            console.log('2');            
+            console.log('2');
+            server.dispatcher = null;
             server.queue.shift();
             if (server.queue[0]) {
                 console.log('3');
