@@ -88,7 +88,7 @@ module.exports = {
             }).catch(console.error());
             if (!queue[0]) {
                 const stream = ytdl(music.url, {filter : 'audioonly'});
-                dispatcher = botConnection.playStream(stream, streamOptions);
+                this.dispatcher = botConnection.playStream(stream, streamOptions);
             }
             queue.push(music);
         }
@@ -123,8 +123,8 @@ module.exports = {
  Command : !skip
  */
     handleSkip : message => {
-        if (queue[0] && dispatcher) {
-            dispatcher.end();
+        if (queue[0] && this.dispatcher) {
+            this.dispatcher.end();
         }
     }
 }
