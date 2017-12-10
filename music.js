@@ -1,9 +1,50 @@
 const tools = require('./tools.js'),
     shared = require('./shared.js'),
-    ytdl = require('ytdl-core');
+    ytdl = require('ytdl-core'),
+    streamOptions = { seek: 0, volume: 1 };
 
 let botVoiceChannel = [],
     botConnection = [];
+
+    let sendMusicEmbed = (message, music, bot) => {
+        let time = {};
+        time = tools.getTimeFormat(music.duration);
+        message.channel.send('', {embed : {
+            color: 65399,
+            author: {
+                name: `BOT ${message.guild.name} : MODE DJ`,
+                icon_url: bot.user.avatarURL
+            },
+            title: 'Now playing :',
+            fields: [{
+                name: 'Titre : ',
+                value: `${music.title}`
+            }, {
+                name: 'Durée :',
+                value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
+            }, {
+                name: 'Proposée par :',
+                value: `${music.author}`
+            }]
+        }});
+    }
+
+let playMusic = (connection, message) => {
+    console.log('1');
+    let server = shared.musicQueues[message.guild.id];
+    sendMusicEmbed(message, server.queue[0], bot);
+    if (!server.dispatcher)
+        server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
+    server.dispatcher.on('end', (end) => {
+        console.log('2');
+        server.dispatcher = null;
+        server.queue.shift();
+        if (server.queue[0]) {
+            console.log('3');
+            playMusic(connection, message);
+        }
+    });
+}
 
 module.exports = {
 /*
@@ -52,7 +93,7 @@ module.exports = {
         if (!shared.musicQueues[message.guild.id])
             shared.musicQueues[message.guild.id] = { queue : [] };
         shared.musicQueues[message.guild.id].queue.push(music);
-        tools.playMusic(botConnection[message.guild.id], message);
+        playMusic(botConnection[message.guild.id], message);
         //message.delete();
     },
 
