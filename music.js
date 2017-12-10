@@ -1,7 +1,5 @@
 const tools = require('./tools.js'),
-    shared = require('./shared.js'),
-    ytdl = require('ytdl-core'),
-    streamOptions = { seek: 0, volume: 1 };
+    shared = require('./shared.js');
 
 let botVoiceChannel = null,
     botConnection = null;
@@ -30,7 +28,8 @@ module.exports = {
  Command : !play [link]
 */
     handlePlay : (message, bot) => {
-        let tmp = shared.musicQueues[message.guild.id].queue[0] ? true : false;
+        let tmp = (shared.musicQueues[message.guild.id] &&
+            shared.musicQueues[message.guild.id].queue[0]) ? true : false;
         let tab = message.content.split(' ');
         let music = {};
         if (!tab[1]) {
