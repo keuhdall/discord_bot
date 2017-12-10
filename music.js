@@ -6,17 +6,7 @@ let botVoiceChannel = null,
     botConnection = null,
     queue = [];
 
-let dispatcher = new Object();
-
-dispatcher.on('end', (end) => {
-    console.log(end);
-    queue.shift();
-    if (queue[0]) {
-        sendMusicEmbed(message, queue[0], bot);
-        stream = ytdl(queue[0].url, {filter : 'audioonly'});
-        dispatcher = botConnection.playStream(stream, streamOptions);
-    }
-});
+let dispatcher;
 
 let sendMusicEmbed = (message, music, bot) => {
     let time = {};
@@ -90,6 +80,15 @@ module.exports = {
                 const stream = ytdl(music.url, {filter : 'audioonly'});
                 this.dispatcher = botConnection.playStream(stream, streamOptions);
             }
+            this.dispatcher.on('end', (end) => {
+                console.log(end);
+                queue.shift();
+                if (queue[0]) {
+                    sendMusicEmbed(message, queue[0], bot);
+                    stream = ytdl(queue[0].url, {filter : 'audioonly'});
+                    this.dispatcher = botConnection.playStream(stream, streamOptions);
+                }
+            });
             queue.push(music);
         }
         message.delete();
