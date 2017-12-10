@@ -102,7 +102,8 @@ Function that check if the user that issued a message is admin or not.
         console.log('1');
         let server = shared.musicQueues[message.guild.id];
         sendMusicEmbed(message, server.queue[0], bot);
-        server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
+        if (!server.dispatcher)
+            server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
         server.dispatcher.on('end', (end) => {
             console.log('2');            
             server.queue.shift();
