@@ -50,7 +50,7 @@ module.exports = {
                 message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
         }).catch(console.error());
         if (!shared.musicQueues[message.guild.id])
-            musicQueues[message.guild.id] = { queue : [] };
+            shared.musicQueues[message.guild.id] = { queue : [] };
         shared.musicQueues[message.guild.id].queue.push(music);
         tools.playMusic(botConnection, message);
         //message.delete();
