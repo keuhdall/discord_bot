@@ -2,8 +2,8 @@ const tools = require('./tools.js'),
     shared = require('./shared.js'),
     ytdl = require('ytdl-core');
 
-let botVoiceChannel = null,
-    botConnection = null;
+let botVoiceChannel = [],
+    botConnection = [];
 
 module.exports = {
 /*
@@ -15,10 +15,10 @@ module.exports = {
         if (!message.member.voiceChannel)
             message.channel.send('Vous devez d\'abord rejoindre un channel vocal pour utiliser cette commande');
         else {
-            botVoiceChannel = message.member.voiceChannel;
+            botVoiceChannel[message.guild.id] = message.member.voiceChannel;
             message.member.voiceChannel.join()
             .then(connection => {
-                botConnection = connection;
+                botConnection[message.guild.id] = connection;
             })
             .catch(console.error());
         }
@@ -36,7 +36,7 @@ module.exports = {
         if (!tab[1]) {
             message.channel.send('Il faut me passer un lien youtube !');
             return ;
-        } else if (!botConnection) {
+        } else if (!botConnection[message.guild.id]) {
             message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
             return ;
         }
@@ -52,7 +52,7 @@ module.exports = {
         if (!shared.musicQueues[message.guild.id])
             shared.musicQueues[message.guild.id] = { queue : [] };
         shared.musicQueues[message.guild.id].queue.push(music);
-        tools.playMusic(botConnection, message);
+        tools.playMusic(botConnection[message.guild.id], message);
         //message.delete();
     },
 
@@ -61,12 +61,12 @@ module.exports = {
  Command : !leave
 */
     handleLeave : message => {
-        if (!botVoiceChannel)
+        if (!botVoiceChannel[message.guild.id])
             message.channel.send('Il faut que je soit dans un channel vocal pour utilier cette commande');
         else {
-            botVoiceChannel.leave();
-            botVoiceChannel = null;
-            botConnection = null;
+            botVoiceChannel[message.guild.id].leave();
+            delete botVoiceChannel[message.guild.id];
+            delete botConnection[message.guild.id];
         }
     },
 
