@@ -1,4 +1,29 @@
-const shared = require('./shared.js');
+const shared = require('./shared.js'),
+    ytdl = require('ytdl-core'),
+    streamOptions = { seek: 0, volume: 1 };
+
+let sendMusicEmbed = (message, music, bot) => {
+    let time = {};
+    time = tools.getTimeFormat(music.duration);
+    message.channel.send('', {embed : {
+        color: 65399,
+        author: {
+            name: `BOT ${message.guild.name} : MODE DJ`,
+            icon_url: bot.user.avatarURL
+        },
+        title: 'Now playing :',
+        fields: [{
+            name: 'Titre : ',
+            value: `${music.title}`
+        }, {
+            name: 'Durée :',
+            value: `${time.hours} heures ${time.minutes} minutes et ${time.seconds} secondes`
+        }, {
+            name: 'Proposée par :',
+            value: `${music.author}`
+        }]
+    }});
+}
 
 module.exports = {
     getRoles : id => {
@@ -71,5 +96,18 @@ Function that check if the user that issued a message is admin or not.
                 str += " ";
         }
         return str;
+    },
+
+    playMusic : (connection, message) => {
+        let server = shared.musicQueues[message.guild.id];
+        let stream = ytdl(server.queue[0].url, {filter : 'audioonly'});
+        sendMusicEmbed(message, server.queue[0], bot);
+        server.dispatcher = connection.playStream(stream, streamOptions);
+        server.queue.shift();
+        server.dispatcher.on('end', (end) => {
+            if (server.queue[0]) {
+                playMusic(connection, message);
+            }
+        });
     }
 }
