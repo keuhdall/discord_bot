@@ -1,5 +1,3 @@
-
-
 const tools = require('./tools.js'),
     ytdl = require('ytdl-core'),
     streamOptions = { seek: 0, volume: 1 };
@@ -10,7 +8,7 @@ let botVoiceChannel = null,
 
 let dispatcher;
 
-dispatcher.on('end', (end) => {
+this.dispatcher.on('end', (end) => {
     console.log(end);
     queue.shift();
     if (queue[0]) {
