@@ -1,5 +1,6 @@
 const tools = require('./tools.js'),
-    shared = require('./shared.js');
+    shared = require('./shared.js'),
+    ytdl = require('ytdl-core');
 
 let botVoiceChannel = null,
     botConnection = null;
