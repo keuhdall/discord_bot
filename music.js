@@ -30,17 +30,14 @@ let botVoiceChannel = [],
     }
 
 let playMusic = (connection, message) => {
-    console.log('1');
     let server = shared.musicQueues[message.guild.id];
     sendMusicEmbed(message, server.queue[0], bot);
     if (!server.dispatcher)
         server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
     server.dispatcher.on('end', (end) => {
-        console.log('2');
         server.dispatcher = null;
         server.queue.shift();
         if (server.queue[0]) {
-            console.log('3');
             playMusic(connection, message);
         }
     });
