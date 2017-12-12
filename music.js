@@ -100,7 +100,7 @@ module.exports = {
         } else {
             shared.musicQueues[message.guild.id].queue.push(music);
         }
-        message.delete();
+        //message.delete();
     },
 
 /*
