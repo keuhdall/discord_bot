@@ -94,7 +94,7 @@ module.exports = {
             shared.musicQueues[message.guild.id] = { queue : [] };
             shared.musicQueues[message.guild.id].queue.push(music);
             playMusic(botConnection[message.guild.id], message);
-        } else if (shared.musicQueues[message.guild.id].dispatcher) {
+        } else if (!shared.musicQueues[message.guild.id].dispatcher) {
             shared.musicQueues[message.guild.id].queue.push(music);
             playMusic(botConnection[message.guild.id], message);
         } else {
