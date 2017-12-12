@@ -89,17 +89,12 @@ module.exports = {
             music.duration = info.length_seconds;
             if (tmp)
                 message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
+            if (!shared.musicQueues[message.guild.id])
+                shared.musicQueues[message.guild.id] = { queue : [] };
+            shared.musicQueues[message.guild.id].queue.push(music);
+            if (!shared.musicQueues[message.guild.id].dispatcher)
+                playMusic(botConnection[message.guild.id], message);
         }).catch(console.error());
-        if (!shared.musicQueues[message.guild.id]) {
-            shared.musicQueues[message.guild.id] = { queue : [] };
-            shared.musicQueues[message.guild.id].queue.push(music);
-            playMusic(botConnection[message.guild.id], message);
-        } else if (!shared.musicQueues[message.guild.id].dispatcher) {
-            shared.musicQueues[message.guild.id].queue.push(music);
-            playMusic(botConnection[message.guild.id], message);
-        } else {
-            shared.musicQueues[message.guild.id].queue.push(music);
-        }
         //message.delete();
     },
 
