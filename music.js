@@ -115,8 +115,8 @@ module.exports = {
  */
     handleList : message => {
         let server = shared.musicQueues[message.guild.id];
-        let titles = server.queue.map((a) => {return a.title + '\n';});
-        message.channel.send(`Il y a actuellement ${server.queue.length} musique(s) dans la queue. Les titres sont les suivant : ${titles}`);
+        let titles = server.queue.map((a) => {return '`' + a.title + '\n' + '`';});
+        message.channel.send(`Il y a actuellement ${server.queue.length} musique(s) dans la queue. Les titres sont les suivant : \n${titles}`);
     },
 
 /*
