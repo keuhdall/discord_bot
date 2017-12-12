@@ -32,7 +32,7 @@ let botVoiceChannel = [],
 let playMusic = (connection, message) => {
     console.log('1');
     let server = shared.musicQueues[message.guild.id];
-    //sendMusicEmbed(message, server.queue[0], bot);
+    sendMusicEmbed(message, server.queue[0], bot);
     if (!server.dispatcher)
         server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
     server.dispatcher.on('end', (end) => {
@@ -83,7 +83,6 @@ module.exports = {
         }
         music.url = tab[1];
         music.author = message.author.username;
-        /*
         ytdl.getInfo(tab[1])
         .then(info => {
             music.title = info.title;
@@ -91,11 +90,13 @@ module.exports = {
             if (tmp)
                 message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
         }).catch(console.error());
-        */
-        if (!shared.musicQueues[message.guild.id])
+        if (!shared.musicQueues[message.guild.id]) {
             shared.musicQueues[message.guild.id] = { queue : [] };
-        shared.musicQueues[message.guild.id].queue.push(music);
-        playMusic(botConnection[message.guild.id], message);
+            shared.musicQueues[message.guild.id].queue.push(music);
+            playMusic(botConnection[message.guild.id], message);
+        } else {
+            shared.musicQueues[message.guild.id].queue.push(music);
+        }
         //message.delete();
     },
 
