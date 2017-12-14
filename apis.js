@@ -152,6 +152,7 @@ Command : !cat
         } else if (tab[1] === "profil") {
             if (tab[2]) {
                 mal_url = "https://myanimelist.net/malappinfo.php?u=" + tools.patchArgs(tab, 2).replace(" ", "+");
+                console.log("URL : " + mal_url);
                 search_type = 'profile';
             } else {
                 message.channel.send("Erreur : pas de profil précisé !");
@@ -169,6 +170,7 @@ Command : !cat
             let parse = xml2js.parseString;
             try {
                 parse(data_get.toString(), (err, result) => {
+                    if (err) console.error(err);
                     if (search_type === 'anime') {
                         message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
                             color: 65399,
@@ -190,7 +192,7 @@ Command : !cat
                             }]
                         }});
                     } else {
-                        if (!result.myinfo) {
+                        if (!result || !result.myinfo) {
                             message.channel.send("Erreur : pas de profil trouvé !");
                             return ;
                         }
