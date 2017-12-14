@@ -62,7 +62,9 @@ Command : !help
     },
 
     handleAbout : message => {
-        message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas à me contacter pour plus de renseignements`);
+        message.channel.send(`Bot fait avec amour par <@${keuhdall}>, n'hesitez pas à me contacter pour plus de renseignements
+        Email : \`lmarques@student.42.fr\`
+        Github : https://github.com/keuhdall`);
     },
 
 /*
