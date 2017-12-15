@@ -167,6 +167,7 @@ Command : !cat
                 'sendImmediately': false
             }
         }).on('data', data_get => {
+            console.log("Payload : " + data_get.toString());
             let parse = xml2js.parseString;
             try {
                 parse(data_get.toString(), (err, result) => {
