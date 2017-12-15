@@ -124,7 +124,8 @@ module.exports = {
  Command : !skip
  */
     handleSkip : message => {
-        if (shared.musicQueues[message.guild.id].dispatcher)
+        if (shared.musicQueues[message.guild.id] &&
+            shared.musicQueues[message.guild.id].dispatcher)
             shared.musicQueues[message.guild.id].dispatcher.end();
     }
 }
