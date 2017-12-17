@@ -155,7 +155,7 @@ Command : !cat
             message.channel.send("Erreur : aucun argument précisé");
         } else if (tab[1] === "profil") {
             if (tab[2]) {
-                mal_url = "https://myanimelist.net/malappinfo.php?u=" + tools.patchArgs(tab, 2).replace(" ", "+");
+                mal_url = "https://myanimelist.net/malappinfo.php?u=" + tools.patchArgs(tab, 2).replace(/ /g, "+");
                 console.log("URL : " + mal_url);
                 search_type = 'profile';
             } else {
@@ -163,7 +163,7 @@ Command : !cat
                 return ;
             }
         } else
-            mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tools.patchArgs(tab, 1).replace(" ", "+");
+            mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tools.patchArgs(tab, 1).replace(/ /g, "+");
             console.log("URL : " + mal_url);
         request.get(mal_url, {
             'auth': {
