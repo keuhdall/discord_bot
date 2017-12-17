@@ -164,6 +164,7 @@ Command : !cat
             }
         } else
             mal_url = "https://myanimelist.net/api/anime/search.xml?q=" + tools.patchArgs(tab, 1).replace(" ", "+");
+            console.log("URL : " + mal_url);
         request.get(mal_url, {
             'auth': {
                 'user': config.mal_username,
