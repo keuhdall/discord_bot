@@ -114,6 +114,10 @@ Command : !cat
         request.get(cat_url).on('data', data_get => {
             let parse = xml2js.parseString;
             parse(data_get.toString(), (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
                 message.channel.send("Voici une une super image de chat trop mignon : " + result.response.data[0].images[0].image[0].url[0]);
             });
         });
@@ -171,7 +175,10 @@ Command : !cat
             let parse = xml2js.parseString;
             try {
                 parse(data_get.toString(), (err, result) => {
-                    if (err) console.error(err);
+                    if (err) {
+                        console.error(err); 
+                        return;
+                    }
                     if (search_type === 'anime') {
                         message.channel.send(`${result.anime.entry.length} résultats trouvés. Meilleur résultat : `, {embed : {
                             color: 65399,
