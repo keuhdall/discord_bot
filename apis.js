@@ -235,6 +235,10 @@ Command : !cat
                             }]
                         }});
                     }
+                }).on('error', res_err => {
+                    console.log(res_err);
+                    message.channel.send("Pas de résultat trouvé !");
+                    return;
                 });
             } catch (e) {
                 console.error(e);
