@@ -9,6 +9,6 @@ try {
 module.exports = {
     adminRoles : JSON.parse(adminlist_s),
     niggerTab : [],
-    killConfirm : false,
+    killConfirm : [],
     musicQueues : {}
 }

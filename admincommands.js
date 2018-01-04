@@ -56,19 +56,23 @@ module.exports = {
             message.channel.send('LOL t\'as cru que t\'allais me shutdown ? Retourne jouer dans ton caca sale plébéien.');
             return ;
         }
-        shared.killConfirm = true;
+        shared.killConfirm[message.guild.id] = message.author.id;
         message.channel.send('Whoah, t\'es sûr de vouloir faire ça bro ?! [y/n]');
     },
 
     checkConfirm : message => {
-        if (message.content === 'y' && shared.killConfirm && tools.isAdmin(message)) {
-            message.channel.send('Ok boss, j\'y vais, à la prochaine !').
-            then(msg => {
+        if (message.content === 'y' &&
+            shared.killConfirm[message.guild.id] &&
+            shared.killConfirm[message.guild.id] === message.author.id) {
+            message.channel.send('Ok boss, j\'y vais, à la prochaine !')
+            .then(msg => {
                 bot.destroy();
             });
-        } else if (message.content === 'n' && shared.killConfirm && tools.isAdmin(message)) {
+        } else if (message.content === 'n' &&
+            shared.killConfirm[message.guild.id] &&
+            shared.killConfirm[message.guild.id] === message.author.id) {
             message.channel.send('Ouf, merci !');
-            shared.killConfirm = false;
+            delete shared.killConfirm[message.guild.id];
         }
     },
 
