@@ -109,5 +109,11 @@ module.exports = {
             message.channel.send(`**${message.author.username}** : ${content}`);
             message.delete();
         }
+    },
+
+    broadcastMessage : (bot, content) => {
+        for (guild in bot.guilds) {
+            bot.guilds[guild].defaultChannel.send(content);
+        }
     }
 }
