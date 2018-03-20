@@ -13,6 +13,10 @@ module.exports = {
         message.channel.send(arg.replace(/ /g, "... ") + "...");
     },
 
+    handleLasergame : message => {
+        message.channel.send("Qui a fait -1200 au lasergame ? <@178069705246900234>");
+    },
+
     /*
      Function that allows me to recover my permissions if i mess to much with the bot
      Command : !member [only works with my ID ; you have to edit the code]

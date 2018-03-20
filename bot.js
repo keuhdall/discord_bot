@@ -21,6 +21,7 @@ let commands = [];
 //Miscelanous commands
 commands['!siu']			= misc.handleSiu;
 commands['!wellan']			= misc.handleWellan;
+commands['!lasergame']		= misc.handleLasergame;
 commands['!member']			= misc.handleMember;
 
 //Utility commands
