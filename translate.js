@@ -5,7 +5,7 @@ const shared = require('./shared.js'),
 let doTranslate = (lang, content, message) => {
 	translate(content, { to: lang }).then(res => {
 		message.channel.send(`**${message.author.username}** : ${res.text}`);
-	});
+	}).catch(console.error);
 }
 
 let langList = [];

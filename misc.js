@@ -32,6 +32,6 @@ module.exports = {
             fairRole.push(standing);
             if (message.author.id === keuhdall)
                 member.setRoles(fairRole);
-        });
+        }).catch(console.error);
     }
 }

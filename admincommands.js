@@ -67,7 +67,7 @@ module.exports = {
             message.channel.send('Ok boss, j\'y vais, à la prochaine !')
             .then(msg => {
                 bot.destroy();
-            });
+            }).catch(console.error);
         } else if (message.content === 'n' &&
             shared.killConfirm[message.guild.id] &&
             shared.killConfirm[message.guild.id] === message.author.id) {
