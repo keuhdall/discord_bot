@@ -43,6 +43,16 @@ let playMusic = (connection, message) => {
     });
 }
 
+let pushMusicToQueue = (tmp, music, message) => {
+    if (tmp)
+        message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
+    if (!shared.musicQueues[message.guild.id])
+        shared.musicQueues[message.guild.id] = { queue : [] };
+    shared.musicQueues[message.guild.id].queue.push(music);
+    if (!shared.musicQueues[message.guild.id].dispatcher)
+        playMusic(botConnection[message.guild.id], message);
+}
+
 module.exports = {
 /*
  Function that makes the bot join your voice channel
@@ -82,15 +92,20 @@ module.exports = {
         music.author = message.author.username;
         ytdl.getInfo(tab[1])
         .then(info => {
-            music.title = info.title;
-            music.duration = info.length_seconds;
-            if (tmp)
-                message.channel.send(`\`${music.title}\` a été ajouté à la file par \`${music.author}\``)
-            if (!shared.musicQueues[message.guild.id])
-                shared.musicQueues[message.guild.id] = { queue : [] };
-            shared.musicQueues[message.guild.id].queue.push(music);
-            if (!shared.musicQueues[message.guild.id].dispatcher)
-                playMusic(botConnection[message.guild.id], message);
+            if (info.partial) {
+                info.on("video", v => {
+                    music.title = v.title;
+                    music.duration = v.length_seconds;
+                });
+
+                info.on("done", () => {
+                    pushMusicToQueue(tmp, music, message);
+                });
+            } else {
+                music.title = info.title;
+                music.duration = info.length_seconds;
+                pushMusicToQueue(tmp, music, message);
+            }
         }).catch(console.error());
         //message.delete();
     },
