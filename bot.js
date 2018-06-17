@@ -122,7 +122,7 @@ bot.on('guildMemberRemove', member => {
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-	console.error("Unhandled promise rejection : " + reason);
+	console.error("Unhandled promise rejection for " + promise + ". Reason : " + reason);
 });
 
 setInterval(() => {spam.checkSpam(bot)}, 60000);
