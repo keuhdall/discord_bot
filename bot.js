@@ -98,7 +98,7 @@ bot.on("message", message => {
 });
 
 bot.on("ready", () => {
-	bot.user.setGame('Down Nogord Simulator');
+	bot.user.setActivity('Agneugneugneu');
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
 });
 
