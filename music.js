@@ -1,7 +1,6 @@
 const tools = require('./tools.js'),
     shared = require('./shared.js'),
-    ytdl = require('ytdl-core'),
-    streamOptions = { seek: 0, volume: 1 };
+    ytdl = require('ytdl-core');
 
 let botVoiceChannel = [],
     botConnection = [];
@@ -33,7 +32,7 @@ let playMusic = (connection, message) => {
     let server = shared.musicQueues[message.guild.id];
     sendMusicEmbed(message, server.queue[0], bot);
     if (!server.dispatcher)
-        server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), streamOptions);
+        server.dispatcher = connection.playStream(ytdl(server.queue[0].url, {filter : 'audioonly'}), { seek: 0, volume: 1, bitrate: 'auto' });
     server.dispatcher.on('end', (end) => {
         server.dispatcher = null;
         server.queue.shift();
