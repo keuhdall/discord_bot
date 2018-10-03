@@ -1,0 +1,42 @@
+{
+  "name": "discord_bot",
+  "version": "1.0.0",
+  "description": "A Discord bot I made for my guild.",
+  "main": "bot.js",
+  "dependencies": {
+    "boom": "^7.2.0",
+    "cryptiles": "^4.1.1",
+    "discord.js": "^11.3.2",
+    "discord.js-music": "^2.1.0",
+    "ffmpeg": "^0.0.4",
+    "google-translate-api": "^2.3.0",
+    "hawk": "^7.0.7",
+    "long": "^4.0.0",
+    "node-opus": "^0.3.0",
+    "opusscript": "^0.0.6",
+    "prism-media": "^0.2.1",
+    "request": "^2.87.0",
+    "snekfetch": "^4.0.2",
+    "sntp": "^3.0.1",
+    "string": "^3.3.3",
+    "stringstream": "^0.0.6",
+    "striptags": "^3.1.1",
+    "ws": "^5.2.0",
+    "xml2js": "^0.4.19",
+    "ytdl-core": "^0.20.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keuhdall/discord_bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/keuhdall/discord_bot/issues"
+  },
+  "homepage": "https://github.com/keuhdall/discord_bot#readme"
+}
