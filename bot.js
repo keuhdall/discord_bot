@@ -121,6 +121,10 @@ bot.on('guildMemberRemove', member => {
 		member.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
 });
 
+bot.on('error', e => console.error(e));
+
+bot.on('warn', e => console.error(e));
+
 process.on("unhandledRejection", (reason, promise) => {
 	console.error("Unhandled promise rejection for " + promise + ". Reason : " + reason);
 });
