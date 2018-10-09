@@ -83,7 +83,7 @@ module.exports = {
     handleNigger : message => {
         if (!message.guild) return ;
         if (!tools.isAdmin(message)) {
-            message.channel.send("Désolé mais tu n'es pas digne d'utiliser cette commande jeune congoïde cosmopolite pharisien");
+            message.channel.send("Désolé mais tu n'es pas digne d'utiliser cette commande jeune cosmopolite pharisien");
             return ;
         }
         let name = tools.patchArgs(message.content.split(" "), 1);

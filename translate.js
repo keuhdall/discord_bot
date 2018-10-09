@@ -8,11 +8,12 @@ let doTranslate = (lang, content, message) => {
 	}).catch(console.error);
 }
 
-let langList = [];
-langList['en'] = "English";
-langList['es'] = "Spanish";
-langList['de'] = "German";
-langList['pt'] = "Portuguese";
+let langList = {
+	"en": "English",
+	"es": "Spannish",
+	"de": "German",
+	"pt": "Portuguese"
+};
 
 module.exports = {
 /*

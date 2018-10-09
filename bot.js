@@ -16,51 +16,50 @@ const config = require('./config.js');
 	keuhdall = '100335365998538752';
 
 //let adminRolesFile = fs.readFileSync('./adminRolesFile.json', 'utf8');
-let commands = [];
+let commands = {
+	//Miscelanous commands
+	'!siu'		 : misc.handleSiu,
+	'!wellan'	 : misc.handleWellan,
+	'!lasergame' : misc.handleLasergame,
+	'!member'	 : misc.handleMember,
 
-//Miscelanous commands
-commands['!siu']			= misc.handleSiu;
-commands['!wellan']			= misc.handleWellan;
-commands['!lasergame']		= misc.handleLasergame;
-commands['!member']			= misc.handleMember;
+	//Utility commands
+	'!adminlist' : utils.handleAdminList,
+	'!help'		 : utils.handleHelp,
+	'!about'	 : utils.handleAbout,
+	'!reminder'	 : utils.handleReminder,
+	'!roll'		 : utils.handleRoll,
+	'!clean'	 : utils.handleClean,
 
-//Utility commands
-commands['!adminlist']		= utils.handleAdminList;
-commands['!help']			= utils.handleHelp;
-commands['!about']			= utils.handleAbout;
-commands['!reminder']		= utils.handleReminder;
-commands['!roll']			= utils.handleRoll;
-commands['!clean']			= utils.handleClean;
-//commands['!msg']			= utils.handleMsg;
+	//Translation commands
+	'!t'		: translate.handleTranslate,
+	'!langlist'	: translate.handleLangList,
 
-//Translation commands
-commands['!t']				= translate.handleTranslate;
-commands['!langlist']		= translate.handleLangList;
+	//Admin Commands
+	'!nigger'	: admcmds.handleNigger,
+	'!setadmin'	: admcmds.handleSetAdmin,
+	'!kill'		: admcmds.handleKill,
 
-//Admin Commands
-commands['!nigger']			= admcmds.handleNigger;
-commands['!setadmin']		= admcmds.handleSetAdmin;
-commands['!kill']			= admcmds.handleKill;
+	//Spam commands
+	'!spamlevel'	: spam.handleSpamlevel,
+	'!spamtime'		: spam.handleSpamtime,
+	'!msginterval'	: spam.handleMsginterval,
 
-//Spam commands
-commands['!spamlevel']		= spam.handleSpamlevel;
-commands['!spamtime']		= spam.handleSpamtime;
-commands['!msginterval']	= spam.handleMsginterval;
+	//Music commands
+	'!join'		: music.handleJoin,
+	'!leave'	: music.handleLeave,
+	'!play'		: music.handlePlay,
+	'!list'		: music.handleList,
+	'!skip'		: music.handleSkip,
 
-//Music commands
-commands['!join']			= music.handleJoin;
-commands['!leave']			= music.handleLeave;
-commands['!play']			= music.handlePlay;
-commands['!list']			= music.handleList;
-commands['!skip']			= music.handleSkip;
-
-//API commands
-commands['!ub']				= apis.handleUb;
-commands['!git']			= apis.handleGit;
-commands['!cat']			= apis.handleCat;
-commands['!quote']			= apis.handleQuote;
-commands['!mal']			= apis.handleMal;
-commands['!poll']			= apis.handlePoll;
+	//API commands
+	'!ub'		: apis.handleUb,
+	'!git'		: apis.handleGit,
+	'!cat'		: apis.handleCat,
+	'!quote'	: apis.handleQuote,
+	'!mal'		: apis.handleMal,
+	'!poll'		: apis.handlePoll
+};
 
 /*
 Function that will automatically add a reaction to the messages of certain members to troll them
@@ -86,7 +85,7 @@ bot.on("message", message => {
 });
 
 bot.on("ready", () => {
-	bot.user.setActivity('Agneugneugneu');
+	bot.user.setActivity('SASAGEYO');
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
 });
 
@@ -95,16 +94,10 @@ bot.on("disconnected", () => {
 	process.exit(1);
 });
 
-bot.on('guildMemberAdd', member => {
-	console.log(`User ${member.nickname} joined server ${member.guild.nane}`);
-});
-
-bot.on('guildMemberRemove', member => {
-	console.log (`User ${member.nickname} left server ${member.guild.name}`);
-});
+bot.on('guildMemberAdd', member => console.log(`User ${member.nickname} joined server ${member.guild.nane}`));
+bot.on('guildMemberRemove', member => console.log (`User ${member.nickname} left server ${member.guild.name}`));
 
 bot.on('error', e => console.error(e));
-
 bot.on('warn', e => console.error(e));
 
 process.on("unhandledRejection", (reason, promise) => {

@@ -195,21 +195,5 @@ Options : -c -t (-t not implented yet)
         }
         else
             message.channel.send('Erreur de syntaxe dans la commande, tapez !help pour plus d\'informations');
-    },
-
-/*
-Function that will display the n-th message
-Command : !msg [index of the message you zqnt to display]
-*/
-    handleMsg : message => {
-        let tab = message.content.split(" ");
-        if (!tab[1] || !message.guild) return ;
-        tab[1]++;
-        message.channel.fetchMessages({limit : tab[1]})
-        .then(messages => {
-            let msg = messages.array();
-            message.channel.send(`${msg[tab[1] - 1].content}`);
-        })
-        .catch(console.error());
     }
 }
