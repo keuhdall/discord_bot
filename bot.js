@@ -71,18 +71,6 @@ function handleReactions(message) {
 	//	message.react('🍗');
 }
 
-var status_old = "";
-function checkYouKnowWho() {
-	let server = bot.guilds.find('name', 'Le serveur des gens spéciaux');
-	if (!server) return;
-	let me = server.members.find('id', keuhdall)
-	let youKnowWho = server.members.find('id', '332296552364376064');
-	if (youKnowWho.presence.status !== status_old) {
-		me.send(`Current status : ${youKnowWho.presence.status}`);
-		status_old = youKnowWho.presence.status;
-	}
-}
-
 bot.on("message", message => {
 	handleReactions(message);
 	spam.checkMessageTime(message);
@@ -108,17 +96,11 @@ bot.on("disconnected", () => {
 });
 
 bot.on('guildMemberAdd', member => {
-	if (member.guild.name === 'Potager')
-		member.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur Discord du Potager !.`);
-	else if (member.guild.name === 'Le serveur des gens spéciaux')
-		member.guild.defaultChannel.send(`Hello <@${member.user.id}>, bienvenue sur le serveur des gens spéciaux, petit special snowflake !.`);
+	console.log(`User ${member.nickname} joined server ${member.guild.nane}`);
 });
 
 bot.on('guildMemberRemove', member => {
-	if (member.guild.name === 'Potager')
-		member.guild.defaultChannel.send(`<@${member.user.id}> viens de quitter.`);
-	else if (member.guild.name === 'Le serveur des gens spéciaux')
-		member.guild.defaultChannel.send(`<@${member.user.id}> viens de nous quitter, il ne devait pas être assez spécial...`);
+	console.log (`User ${member.nickname} left server ${member.guild.name}`);
 });
 
 bot.on('error', e => console.error(e));
@@ -131,5 +113,4 @@ process.on("unhandledRejection", (reason, promise) => {
 
 setInterval(() => {spam.checkSpam(bot)}, 60000);
 setInterval(utils.checkReminder, 60000);
-setInterval(checkYouKnowWho, 10000);
 bot.login(config.token);
