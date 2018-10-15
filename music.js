@@ -3,7 +3,7 @@ const tools = require('./tools.js'),
     ytdl = require('ytdl-core');
 
 let botVoiceChannel = [],
-    botConnection = [];
+    botConnection   = [];
 
     let sendMusicEmbed = (message, music, bot) => {
         let time = {};

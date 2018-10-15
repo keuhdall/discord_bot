@@ -48,15 +48,11 @@ Function that check if the user that issued a message is admin or not.
  Function that takes a timestamp as parameter and returns an object comtaining the hours, minutes and seconds of that timestamp
  */
     getTimeFormat : time => {
-        let newTime = {};
-        newTime.hours = time / 3600;
-        newTime.hours = Math.trunc(newTime.hours);
-        newTime.minutes = time / 60;
-        newTime.minutes = Math.trunc(newTime.minutes);
-        newTime.minutes %= 60;
-        newTime.seconds = time % 3600;
-        newTime.seconds %= 60;
-        return (newTime);
+        return {
+            'hours'     : Math.trunc(time / 3600),
+            'minutes'   : Math.trunc(time / 60) % 60,
+            'seconds'   : (time % 3600) % 60
+        };
     },
 
     isAlpha : c => {

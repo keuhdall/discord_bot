@@ -21,7 +21,6 @@ let commands = {
 	'!siu'		 : misc.handleSiu,
 	'!wellan'	 : misc.handleWellan,
 	'!lasergame' : misc.handleLasergame,
-	'!member'	 : misc.handleMember,
 
 	//Utility commands
 	'!adminlist' : utils.handleAdminList,
