@@ -20,6 +20,7 @@ let commands = {
 	//Miscelanous commands
 	'!siu'		 : misc.handleSiu,
 	'!wellan'	 : misc.handleWellan,
+	'!sjw'		 : misc.handleSjw,
 	'!lasergame' : misc.handleLasergame,
 
 	//Utility commands
